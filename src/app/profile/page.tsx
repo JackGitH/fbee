@@ -5,6 +5,82 @@ import { GlassCard } from '@/components/common/GlassCard';
 import { CountUp } from '@/components/common/CountUp';
 import { Button } from '@/components/common/Button';
 import { mockUserData } from '@/lib/mock-data';
+import { useLanguage } from '@/lib/i18n/context';
+
+const translations = {
+  zh: {
+    profileTitle: '个人中心',
+    sanctum: '圣殿',
+    profileDesc: '详细查看您的生态足迹和奖励。',
+    identityBound: '身份绑定',
+    verifiedNode: '已验证节点',
+    wallet: '钱包地址',
+    registered: '注册时间',
+    rank: '等级',
+    assetInventory: '资产总览',
+    fbeeBalance: 'FBEE 余额',
+    predictionTickets: '预测卷',
+    totalRewards: '总奖励',
+    miningRewards: '挖矿收益',
+    referralRewards: '推荐收益',
+    reached: '已达成',
+    principal: '本金',
+    target: '目标 (3x)',
+    accumulated: '已累计',
+    remaining: '剩余',
+    autoRenewInfo: '达到 3 倍目标后，您的节点将通过挖矿和奖励自动续费。',
+    details: '详情',
+    earnings: '收益记录',
+    deposits: '入金记录',
+    source: '来源',
+    type: '类型',
+    amount: '金额',
+    date: '日期',
+    status: '状态',
+    lpReceived: 'LP 获得',
+    loadMore: '加载更多',
+    yield: '收益',
+    referral: '推荐',
+    active: '活跃',
+    exited: '已退出',
+  },
+  en: {
+    profileTitle: 'Profile',
+    sanctum: 'Sanctum',
+    profileDesc: 'Detailed overview of your ecosystem footprint and rewards.',
+    identityBound: 'Identity Bound',
+    verifiedNode: 'Verified Node',
+    wallet: 'Wallet',
+    registered: 'Registered',
+    rank: 'Rank',
+    assetInventory: 'Asset Inventory',
+    fbeeBalance: 'FBEE Balance',
+    predictionTickets: 'Prediction Tickets',
+    totalRewards: 'Total Rewards',
+    miningRewards: 'Mining Rewards',
+    referralRewards: 'Referral Rewards',
+    reached: 'Reached',
+    principal: 'Principal',
+    target: 'Target (3x)',
+    accumulated: 'Accumulated',
+    remaining: 'Remaining',
+    autoRenewInfo: 'Your node will auto-renew once the 3x target is achieved through mining and rewards.',
+    details: 'Details',
+    earnings: 'Earnings',
+    deposits: 'Deposits',
+    source: 'Source',
+    type: 'Type',
+    amount: 'Amount',
+    date: 'Date',
+    status: 'Status',
+    lpReceived: 'LP Received',
+    loadMore: 'Load More',
+    yield: 'Yield',
+    referral: 'Referral',
+    active: 'Active',
+    exited: 'Exited',
+  },
+};
 
 // Mock data for earnings and deposits
 const earningsData = [
@@ -22,6 +98,8 @@ const depositsData = [
 ];
 
 export default function ProfilePage() {
+  const { language } = useLanguage();
+  const t = translations[language];
   const [activeTab, setActiveTab] = useState<'earnings' | 'deposits'>('earnings');
 
   // SVG Circle Progress calculations for 3x exit
@@ -37,9 +115,9 @@ export default function ProfilePage() {
       {/* Header */}
       <header className="mb-12">
         <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-2">
-          Profile <span className="text-primary">Sanctum</span>
+          {t.profileTitle} <span className="text-primary">{t.sanctum}</span>
         </h1>
-        <p className="text-on-surface-variant">Detailed overview of your ecosystem footprint and rewards.</p>
+        <p className="text-on-surface-variant">{t.profileDesc}</p>
       </header>
 
       {/* Main Grid Layout */}
@@ -61,21 +139,21 @@ export default function ProfilePage() {
                 </span>
               </div>
               <div>
-                <h3 className="text-on-surface font-display font-bold">Identity Bound</h3>
-                <span className="text-xs text-tertiary px-2 py-0.5 bg-tertiary/10 rounded-full">Verified Node</span>
+                <h3 className="text-on-surface font-display font-bold">{t.identityBound}</h3>
+                <span className="text-xs text-tertiary px-2 py-0.5 bg-tertiary/10 rounded-full">{t.verifiedNode}</span>
               </div>
             </div>
             <div className="space-y-4">
               <div className="flex justify-between items-center text-sm">
-                <span className="text-on-surface-variant">Wallet</span>
+                <span className="text-on-surface-variant">{t.wallet}</span>
                 <span className="font-mono text-on-surface">{mockUserData.address}</span>
               </div>
               <div className="flex justify-between items-center text-sm">
-                <span className="text-on-surface-variant">Registered</span>
+                <span className="text-on-surface-variant">{t.registered}</span>
                 <span className="text-on-surface">{mockUserData.registeredAt}</span>
               </div>
               <div className="flex justify-between items-center text-sm">
-                <span className="text-on-surface-variant">Rank</span>
+                <span className="text-on-surface-variant">{t.rank}</span>
                 <span className="text-primary font-bold">{mockUserData.level}</span>
               </div>
             </div>
@@ -83,12 +161,12 @@ export default function ProfilePage() {
 
           {/* Asset Summary Card */}
           <GlassCard className="border-l-4 border-primary">
-            <h3 className="text-xs uppercase tracking-widest text-outline font-bold mb-6">Asset Inventory</h3>
+            <h3 className="text-xs uppercase tracking-widest text-outline font-bold mb-6">{t.assetInventory}</h3>
             <div className="space-y-6">
               {/* Main FBEE Balance */}
               <div className="flex justify-between items-end">
                 <div>
-                  <p className="text-xs text-on-surface-variant mb-1">FBEE Balance</p>
+                  <p className="text-xs text-on-surface-variant mb-1">{t.fbeeBalance}</p>
                   <CountUp 
                     end={mockUserData.fbeeBalance} 
                     decimals={1}
@@ -105,14 +183,14 @@ export default function ProfilePage() {
               {/* 2x2 Grid */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-[10px] uppercase text-outline mb-1">Prediction Tickets</p>
+                  <p className="text-[10px] uppercase text-outline mb-1">{t.predictionTickets}</p>
                   <CountUp 
                     end={mockUserData.predictionTickets} 
                     className="text-lg font-display font-medium"
                   />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase text-outline mb-1">Total Rewards</p>
+                  <p className="text-[10px] uppercase text-outline mb-1">{t.totalRewards}</p>
                   <CountUp 
                     end={mockUserData.totalRewards} 
                     decimals={1}
@@ -120,7 +198,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase text-outline mb-1">Mining Rewards</p>
+                  <p className="text-[10px] uppercase text-outline mb-1">{t.miningRewards}</p>
                   <CountUp 
                     end={mockUserData.miningRewards} 
                     decimals={1}
@@ -128,7 +206,7 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase text-outline mb-1">Referral Rewards</p>
+                  <p className="text-[10px] uppercase text-outline mb-1">{t.referralRewards}</p>
                   <CountUp 
                     end={mockUserData.referralRewards} 
                     decimals={1}
@@ -174,7 +252,7 @@ export default function ProfilePage() {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-xs uppercase tracking-widest text-outline">Reached</span>
+                  <span className="text-xs uppercase tracking-widest text-outline">{t.reached}</span>
                   <CountUp 
                     end={mockUserData.tripleExitProgress} 
                     suffix="%"
@@ -190,7 +268,7 @@ export default function ProfilePage() {
               <div className="flex-1 grid grid-cols-2 gap-8 w-full">
                 <div className="space-y-1">
                   <p className="text-xs text-on-surface-variant flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-outline"></span> Principal
+                    <span className="w-2 h-2 rounded-full bg-outline"></span> {t.principal}
                   </p>
                   <CountUp 
                     end={mockUserData.principal} 
@@ -200,7 +278,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs text-on-surface-variant flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-primary"></span> Target (3x)
+                    <span className="w-2 h-2 rounded-full bg-primary"></span> {t.target}
                   </p>
                   <CountUp 
                     end={mockUserData.tripleExitTarget} 
@@ -210,7 +288,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs text-on-surface-variant flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-secondary"></span> Accumulated
+                    <span className="w-2 h-2 rounded-full bg-secondary"></span> {t.accumulated}
                   </p>
                   <CountUp 
                     end={mockUserData.totalEarned} 
@@ -220,7 +298,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs text-on-surface-variant flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-error"></span> Remaining
+                    <span className="w-2 h-2 rounded-full bg-error"></span> {t.remaining}
                   </p>
                   <CountUp 
                     end={mockUserData.tripleExitTarget - mockUserData.totalEarned} 
@@ -237,9 +315,9 @@ export default function ProfilePage() {
                 <svg className="w-5 h-5 text-secondary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-xs text-on-surface-variant">Your node will auto-renew once the 3x target is achieved through mining and rewards.</p>
+                <p className="text-xs text-on-surface-variant">{t.autoRenewInfo}</p>
               </div>
-              <button className="text-xs font-bold text-primary hover:underline transition-all whitespace-nowrap ml-4">Details</button>
+              <button className="text-xs font-bold text-primary hover:underline transition-all whitespace-nowrap ml-4">{t.details}</button>
             </div>
           </GlassCard>
 
@@ -255,7 +333,7 @@ export default function ProfilePage() {
                     : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               >
-                Earnings
+                {t.earnings}
               </button>
               <button 
                 onClick={() => setActiveTab('deposits')}
@@ -265,7 +343,7 @@ export default function ProfilePage() {
                     : 'text-on-surface-variant hover:text-on-surface'
                 }`}
               >
-                Deposits
+                {t.deposits}
               </button>
             </div>
 
@@ -275,11 +353,11 @@ export default function ProfilePage() {
                 <table className="w-full text-left">
                   <thead className="bg-surface-container-lowest/50">
                     <tr>
-                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">Source</th>
-                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">Type</th>
-                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">Amount</th>
-                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">Date</th>
-                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">Status</th>
+                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">{t.source}</th>
+                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">{t.type}</th>
+                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">{t.amount}</th>
+                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">{t.date}</th>
+                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">{t.status}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/5">
@@ -314,10 +392,10 @@ export default function ProfilePage() {
                 <table className="w-full text-left">
                   <thead className="bg-surface-container-lowest/50">
                     <tr>
-                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">Date</th>
-                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">Amount</th>
-                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">LP Received</th>
-                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">Status</th>
+                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">{t.date}</th>
+                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">{t.amount}</th>
+                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">{t.lpReceived}</th>
+                      <th className="px-6 py-4 text-[10px] uppercase tracking-widest text-outline">{t.status}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/5">
@@ -349,7 +427,7 @@ export default function ProfilePage() {
             {/* Load More Button */}
             <div className="p-4 flex justify-center border-t border-outline-variant/10">
               <Button variant="ghost" className="flex items-center gap-2">
-                Load More
+                {t.loadMore}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>

@@ -3,15 +3,28 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useLanguage } from '@/lib/i18n/context';
 
-const navItems = [
-  { label: 'Dashboard', href: '/' },
-  { label: 'Mining', href: '/mining' },
-  { label: 'Trade', href: '/trade' },
-  { label: 'Referral', href: '/referral' },
-  { label: 'Analytics', href: '/analytics' },
-  { label: 'Finance', href: '/finance' },
-];
+const navHrefs = ['/', '/mining', '/trade', '/referral', '/analytics', '/finance'];
+
+const translations = {
+  zh: {
+    nav: ['首页', '挖矿', '交易', '推荐', '分析', '理财'],
+    connectWallet: '连接钱包',
+    connected: '已连接',
+    prediction: '预测',
+    profile: '个人中心',
+    bscNetwork: 'BSC 网络',
+  },
+  en: {
+    nav: ['Dashboard', 'Mining', 'Trade', 'Referral', 'Analytics', 'Finance'],
+    connectWallet: 'Connect Wallet',
+    connected: 'Connected',
+    prediction: 'Prediction',
+    profile: 'Profile',
+    bscNetwork: 'BSC Network',
+  }
+};
 
 interface TopAppBarProps {
   onWalletConnect?: () => void;
@@ -22,6 +35,8 @@ export function TopAppBar({ onWalletConnect }: TopAppBarProps) {
   const [isConnected, setIsConnected] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const walletAddress = '0x7a3b...9f2e';
+  const { language, toggleLanguage } = useLanguage();
+  const t = translations[language];
 
   const handleWalletClick = () => {
     if (isConnected) {
@@ -44,19 +59,19 @@ export function TopAppBar({ onWalletConnect }: TopAppBarProps) {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href;
+            {navHrefs.map((href, index) => {
+              const isActive = pathname === href;
               return (
                 <Link
-                  key={item.href}
-                  href={item.href}
+                  key={href}
+                  href={href}
                   className={`px-3 py-2 rounded-lg text-label-lg transition-colors ${
                     isActive
                       ? 'text-primary'
                       : 'text-on-surface-variant hover:text-on-surface'
                   }`}
                 >
-                  {item.label}
+                  {t.nav[index]}
                 </Link>
               );
             })}
@@ -75,12 +90,15 @@ export function TopAppBar({ onWalletConnect }: TopAppBarProps) {
               onClick={handleWalletClick}
               className="btn-primary-gradient px-4 py-2 rounded-lg text-label-md"
             >
-              {isConnected ? walletAddress : 'Connect Wallet'}
+              {isConnected ? walletAddress : t.connectWallet}
             </button>
 
             {/* Language Toggle */}
-            <button className="px-2 py-1.5 text-label-md text-on-surface-variant hover:text-on-surface transition-colors">
-              EN
+            <button 
+              onClick={toggleLanguage}
+              className="px-2 py-1.5 text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+            >
+              {language === 'zh' ? 'EN' : '中'}
             </button>
           </div>
 
@@ -114,12 +132,12 @@ export function TopAppBar({ onWalletConnect }: TopAppBarProps) {
           />
           <div className="absolute top-16 left-0 right-0 bottom-0 bg-surface/95 backdrop-blur-xl animate-fade-in overflow-y-auto">
             <nav className="flex flex-col p-4 gap-2">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
+              {navHrefs.map((href, index) => {
+                const isActive = pathname === href;
                 return (
                   <Link
-                    key={item.href}
-                    href={item.href}
+                    key={href}
+                    href={href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`px-4 py-3 rounded-lg text-title-md transition-colors ${
                       isActive
@@ -127,7 +145,7 @@ export function TopAppBar({ onWalletConnect }: TopAppBarProps) {
                         : 'text-on-surface-variant hover:text-on-surface hover:bg-white/5'
                     }`}
                   >
-                    {item.label}
+                    {t.nav[index]}
                   </Link>
                 );
               })}
@@ -142,7 +160,7 @@ export function TopAppBar({ onWalletConnect }: TopAppBarProps) {
                     : 'text-on-surface-variant hover:text-on-surface hover:bg-white/5'
                 }`}
               >
-                Prediction
+                {t.prediction}
               </Link>
               <Link
                 href="/profile"
@@ -153,7 +171,7 @@ export function TopAppBar({ onWalletConnect }: TopAppBarProps) {
                     : 'text-on-surface-variant hover:text-on-surface hover:bg-white/5'
                 }`}
               >
-                Profile
+                {t.profile}
               </Link>
 
               <div className="border-t border-white/10 my-4" />
@@ -162,9 +180,14 @@ export function TopAppBar({ onWalletConnect }: TopAppBarProps) {
               <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse" />
-                  <span className="text-label-md text-on-surface-variant">BSC Network</span>
+                  <span className="text-label-md text-on-surface-variant">{t.bscNetwork}</span>
                 </div>
-                <button className="text-label-md text-on-surface-variant">EN</button>
+                <button 
+                  onClick={toggleLanguage}
+                  className="text-label-md text-on-surface-variant hover:text-on-surface"
+                >
+                  {language === 'zh' ? 'EN' : '中'}
+                </button>
               </div>
 
               <button
@@ -174,7 +197,7 @@ export function TopAppBar({ onWalletConnect }: TopAppBarProps) {
                 }}
                 className="mx-4 btn-primary-gradient px-4 py-3 rounded-lg text-label-lg"
               >
-                {isConnected ? walletAddress : 'Connect Wallet'}
+                {isConnected ? walletAddress : t.connectWallet}
               </button>
             </nav>
           </div>

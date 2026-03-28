@@ -5,6 +5,78 @@ import { GlassCard } from '@/components/common/GlassCard';
 import { CountUp } from '@/components/common/CountUp';
 import { Button } from '@/components/common/Button';
 import { mockReferralData } from '@/lib/mock-data';
+import { useLanguage } from '@/lib/i18n/context';
+
+const translations = {
+  zh: {
+    inviteAndEarn: '邀请赚取',
+    inviteDesc: '壮大蜂群。在 FBEE 生态系统中赚取高达 20 层深度的持续奖励。',
+    yourReferralLink: '您的专属推荐链接',
+    copied: '已复制！',
+    copy: '复制',
+    downloadQR: '下载二维码',
+    teamSize: '团队人数',
+    maxDepth: '最大深度',
+    totalDeposited: '团队总入金',
+    directInvites: '直接邀请',
+    mySuperior: '我的上级',
+    step1Title: '转账 2 FBEE',
+    step1Desc: '通过少量 Gas 费启动智能合约链接。',
+    step2Title: '上级回转',
+    step2Desc: '协议自动回转 1 FBEE 以确认握手。',
+    step3Title: '连接确认',
+    step3Desc: '节点验证绑定关系并激活奖励深度。',
+    pendingRewards: '待领取奖励',
+    accumulating: '累积中',
+    estimatedValue: '估算价值：',
+    oneClickClaim: '一键领取',
+    networkTree: '网络架构树',
+    active: '活跃',
+    inactive: '不活跃',
+    you: '你',
+    incentiveTierAnalysis: '激励层级分析',
+    generation: '代数',
+    activeMembers: '活跃成员',
+    rate: '比例',
+    totalFBEE: '总 FBEE',
+    direct: '直推',
+    tier: '层',
+  },
+  en: {
+    inviteAndEarn: 'Invite & Earn',
+    inviteDesc: 'Grow the swarm. Earn continuous rewards up to 20 levels deep in the FBEE ecosystem.',
+    yourReferralLink: 'Your Unique Referral Link',
+    copied: 'Copied!',
+    copy: 'Copy',
+    downloadQR: 'Download QR',
+    teamSize: 'Team Size',
+    maxDepth: 'Max Depth',
+    totalDeposited: 'Total Deposited',
+    directInvites: 'Direct Invites',
+    mySuperior: 'My Superior',
+    step1Title: 'Transfer 2 FBEE',
+    step1Desc: 'Initiate the smart contract link with a small gas deposit.',
+    step2Title: 'Superior Reversion',
+    step2Desc: 'Automatic protocol sends 1 FBEE back to confirm handshake.',
+    step3Title: 'Connection Confirmed',
+    step3Desc: 'Nodes validate the bond and activate reward depth.',
+    pendingRewards: 'Pending Rewards',
+    accumulating: 'Accumulating',
+    estimatedValue: 'Estimated value: ',
+    oneClickClaim: 'One-Click Claim',
+    networkTree: 'Network Tree',
+    active: 'Active',
+    inactive: 'Inactive',
+    you: 'You',
+    incentiveTierAnalysis: 'Incentive Tier Analysis',
+    generation: 'Generation',
+    activeMembers: 'Active Members',
+    rate: 'Rate',
+    totalFBEE: 'Total FBEE',
+    direct: 'Direct',
+    tier: 'Tier',
+  },
+};
 
 // Network tree node type
 interface TreeNode {
@@ -13,8 +85,14 @@ interface TreeNode {
   children: TreeNode[];
 }
 
+interface NodeTexts {
+  you: string;
+  active: string;
+  inactive: string;
+}
+
 // Tree node component
-function NetworkNode({ node, level = 0 }: { node: TreeNode; level?: number }) {
+function NetworkNode({ node, level = 0, texts }: { node: TreeNode; level?: number; texts: NodeTexts }) {
   const isRoot = level === 0;
   
   return (
@@ -32,7 +110,7 @@ function NetworkNode({ node, level = 0 }: { node: TreeNode; level?: number }) {
           <span className={`text-xs font-bold ${
             isRoot ? 'text-primary' : node.active ? 'text-tertiary' : 'text-error/70'
           }`}>
-            {isRoot ? 'You' : level}
+            {isRoot ? texts.you : level}
           </span>
         </div>
         <div>
@@ -40,14 +118,14 @@ function NetworkNode({ node, level = 0 }: { node: TreeNode; level?: number }) {
             {node.address}
           </p>
           <p className={`text-xs ${node.active ? 'text-tertiary' : 'text-on-surface-variant'}`}>
-            {node.active ? 'Active' : 'Inactive'}
+            {node.active ? texts.active : texts.inactive}
           </p>
         </div>
       </div>
       {node.children.length > 0 && (
         <div className="mt-1">
           {node.children.map((child, index) => (
-            <NetworkNode key={index} node={child} level={level + 1} />
+            <NetworkNode key={index} node={child} level={level + 1} texts={texts} />
           ))}
         </div>
       )}
@@ -57,6 +135,8 @@ function NetworkNode({ node, level = 0 }: { node: TreeNode; level?: number }) {
 
 export default function ReferralPage() {
   const [copied, setCopied] = useState(false);
+  const { language } = useLanguage();
+  const t = translations[language];
 
   const handleCopy = () => {
     navigator.clipboard.writeText(mockReferralData.referralLink);
@@ -76,15 +156,15 @@ export default function ReferralPage() {
               <div className="flex-1 space-y-6">
                 <div>
                   <h1 className="font-headline text-3xl lg:text-4xl font-bold text-on-surface mb-2">
-                    Invite & Earn
+                    {t.inviteAndEarn}
                   </h1>
                   <p className="text-on-surface-variant text-sm lg:text-base max-w-md">
-                    Grow the swarm. Earn continuous rewards up to 20 levels deep in the FBEE ecosystem.
+                    {t.inviteDesc}
                   </p>
                 </div>
                 <div className="space-y-3">
                   <label className="text-xs uppercase tracking-widest text-secondary font-bold">
-                    Your Unique Referral Link
+                    {t.yourReferralLink}
                   </label>
                   <div className="flex items-center gap-2 bg-black/50 p-1 pl-4 rounded-lg border border-outline-variant/20">
                     <span className="font-mono text-sm text-on-surface truncate flex-1">
@@ -94,7 +174,7 @@ export default function ReferralPage() {
                       onClick={handleCopy}
                       className="bg-primary text-on-primary px-4 py-2 rounded-lg font-bold text-xs uppercase hover:bg-primary-container transition-all active:scale-95 min-w-[70px]"
                     >
-                      {copied ? 'Copied!' : 'Copy'}
+                      {copied ? t.copied : t.copy}
                     </button>
                   </div>
                 </div>
@@ -105,7 +185,7 @@ export default function ReferralPage() {
                   <span className="text-4xl font-bold text-surface-container">QR</span>
                 </div>
                 <p className="text-surface-container-lowest text-[10px] font-black uppercase text-center tracking-tighter mt-3">
-                  Download QR
+                  {t.downloadQR}
                 </p>
               </div>
             </div>
@@ -121,7 +201,7 @@ export default function ReferralPage() {
                 <CountUp end={mockReferralData.teamSize} />
               </div>
               <div className="text-[10px] text-on-surface-variant uppercase tracking-wider">
-                Team Size
+                {t.teamSize}
               </div>
             </div>
           </div>
@@ -132,7 +212,7 @@ export default function ReferralPage() {
                 <CountUp end={mockReferralData.maxDepth} />
               </div>
               <div className="text-[10px] text-on-surface-variant uppercase tracking-wider">
-                Max Depth
+                {t.maxDepth}
               </div>
             </div>
           </div>
@@ -143,7 +223,7 @@ export default function ReferralPage() {
                 <CountUp end={mockReferralData.teamTotalDeposit} prefix="$" separator />
               </div>
               <div className="text-[10px] text-on-surface-variant uppercase tracking-wider">
-                Total Deposited
+                {t.totalDeposited}
               </div>
             </div>
           </div>
@@ -154,7 +234,7 @@ export default function ReferralPage() {
                 <CountUp end={mockReferralData.directInvites} />
               </div>
               <div className="text-[10px] text-on-surface-variant uppercase tracking-wider">
-                Direct Invites
+                {t.directInvites}
               </div>
             </div>
           </div>
@@ -170,7 +250,7 @@ export default function ReferralPage() {
               <span className="text-primary text-xl">🛡️</span>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-on-surface">My Superior</h3>
+              <h3 className="text-lg font-bold text-on-surface">{t.mySuperior}</h3>
               <p className="font-mono text-sm text-on-surface-variant">{mockReferralData.upline}</p>
             </div>
             <span className="ml-auto text-tertiary text-xl">✓</span>
@@ -184,9 +264,9 @@ export default function ReferralPage() {
                 01
               </div>
               <div className="flex-1 pt-1">
-                <h4 className="text-sm font-bold text-on-surface">Transfer 2 FBEE</h4>
+                <h4 className="text-sm font-bold text-on-surface">{t.step1Title}</h4>
                 <p className="text-xs text-on-surface-variant mt-1">
-                  Initiate the smart contract link with a small gas deposit.
+                  {t.step1Desc}
                 </p>
               </div>
               <span className="text-tertiary">✓</span>
@@ -197,9 +277,9 @@ export default function ReferralPage() {
                 02
               </div>
               <div className="flex-1 pt-1">
-                <h4 className="text-sm font-bold text-on-surface">Superior Reversion</h4>
+                <h4 className="text-sm font-bold text-on-surface">{t.step2Title}</h4>
                 <p className="text-xs text-on-surface-variant mt-1">
-                  Automatic protocol sends 1 FBEE back to confirm handshake.
+                  {t.step2Desc}
                 </p>
               </div>
               <span className="text-secondary animate-pulse">↻</span>
@@ -210,9 +290,9 @@ export default function ReferralPage() {
                 03
               </div>
               <div className="flex-1 pt-1">
-                <h4 className="text-sm font-bold text-on-surface-variant">Connection Confirmed</h4>
+                <h4 className="text-sm font-bold text-on-surface-variant">{t.step3Title}</h4>
                 <p className="text-xs text-on-surface-variant mt-1">
-                  Nodes validate the bond and activate reward depth.
+                  {t.step3Desc}
                 </p>
               </div>
             </div>
@@ -223,9 +303,9 @@ export default function ReferralPage() {
         <GlassCard className="!p-8 flex flex-col justify-between bg-gradient-to-br from-surface-container-low to-surface-container">
           <div className="space-y-6">
             <div className="flex justify-between items-start">
-              <h3 className="text-xl font-headline font-bold text-on-surface">Pending Rewards</h3>
+              <h3 className="text-xl font-headline font-bold text-on-surface">{t.pendingRewards}</h3>
               <span className="px-3 py-1 bg-tertiary/10 text-tertiary text-[10px] font-bold uppercase tracking-widest rounded-full">
-                Accumulating
+                {t.accumulating}
               </span>
             </div>
             <div className="flex items-baseline gap-2">
@@ -235,7 +315,7 @@ export default function ReferralPage() {
               <span className="text-xl font-bold text-primary">FBEE</span>
             </div>
             <p className="text-sm text-on-surface-variant">
-              Estimated value: <span className="text-on-surface font-mono">≈ ${(mockReferralData.pendingReferralRewards * 0.042).toFixed(2)} USDT</span>
+              {t.estimatedValue}<span className="text-on-surface font-mono">≈ ${(mockReferralData.pendingReferralRewards * 0.042).toFixed(2)} USDT</span>
             </p>
           </div>
           <Button 
@@ -244,7 +324,7 @@ export default function ReferralPage() {
             size="lg"
             className="mt-6 !py-4 uppercase tracking-widest"
           >
-            One-Click Claim
+            {t.oneClickClaim}
           </Button>
         </GlassCard>
       </section>
@@ -252,41 +332,41 @@ export default function ReferralPage() {
       {/* Network Architecture Tree */}
       <section className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h2 className="text-2xl font-headline font-bold text-on-surface">Network Tree</h2>
+          <h2 className="text-2xl font-headline font-bold text-on-surface">{t.networkTree}</h2>
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-tertiary" />
-              <span className="text-xs text-on-surface-variant">Active</span>
+              <span className="text-xs text-on-surface-variant">{t.active}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-error/50" />
-              <span className="text-xs text-on-surface-variant">Inactive</span>
+              <span className="text-xs text-on-surface-variant">{t.inactive}</span>
             </div>
           </div>
         </div>
         <GlassCard className="!p-6 overflow-x-auto">
-          <NetworkNode node={mockReferralData.networkTree} />
+          <NetworkNode node={mockReferralData.networkTree} texts={{ you: t.you, active: t.active, inactive: t.inactive }} />
         </GlassCard>
       </section>
 
       {/* Referral Reward Tier Table */}
       <section className="space-y-6">
-        <h2 className="text-2xl font-headline font-bold text-on-surface">Incentive Tier Analysis</h2>
+        <h2 className="text-2xl font-headline font-bold text-on-surface">{t.incentiveTierAnalysis}</h2>
         <div className="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
           <table className="w-full text-left">
             <thead className="bg-surface-container-high border-b border-outline-variant/10">
               <tr>
                 <th className="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
-                  Generation
+                  {t.generation}
                 </th>
                 <th className="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
-                  Active Members
+                  {t.activeMembers}
                 </th>
                 <th className="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
-                  Rate
+                  {t.rate}
                 </th>
                 <th className="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest text-right">
-                  Total FBEE
+                  {t.totalFBEE}
                 </th>
               </tr>
             </thead>
@@ -294,7 +374,7 @@ export default function ReferralPage() {
               {mockReferralData.tiers.map((tier, index) => (
                 <tr key={tier.generation} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-4 text-sm font-bold text-on-surface">
-                    L{tier.generation} - {tier.generation === 1 ? 'Direct' : `Tier ${tier.generation}`}
+                    L{tier.generation} - {tier.generation === 1 ? t.direct : `${t.tier} ${tier.generation}`}
                   </td>
                   <td className="px-6 py-4 text-sm text-on-surface">
                     <CountUp end={tier.activeMembers} />

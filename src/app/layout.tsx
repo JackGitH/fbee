@@ -3,6 +3,7 @@ import "./globals.css";
 import { TopAppBar } from "@/components/layout/TopAppBar";
 import { BottomStatusBar } from "@/components/layout/BottomStatusBar";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { LanguageProvider } from "@/lib/i18n/context";
 
 export const metadata: Metadata = {
   title: "FBEE - Decentralized Finance DApp",
@@ -17,12 +18,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-surface text-on-surface font-body antialiased">
-        <TopAppBar />
-        <main className="pt-16 pb-12 md:pb-10 min-h-screen">
-          {children}
-        </main>
-        <BottomStatusBar />
-        <MobileNav />
+        <LanguageProvider>
+          <TopAppBar />
+          <main className="pt-16 pb-12 md:pb-10 min-h-screen">
+            {children}
+          </main>
+          <BottomStatusBar />
+          <MobileNav />
+        </LanguageProvider>
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { GlassCard } from '@/components/common/GlassCard';
 import { CountUp } from '@/components/common/CountUp';
 import { mockAnalyticsData } from '@/lib/mock-data';
+import { useLanguage } from '@/lib/i18n/context';
 import {
   AreaChart,
   Area,
@@ -20,10 +21,63 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
+const translations = {
+  zh: {
+    networkAnalytics: '网络分析',
+    analyticsDesc: 'FBEE 通缩生态系统和流动性深度的实时数据可视化。',
+    totalAddresses: '总参与地址',
+    referralPairs: '推荐关系对',
+    burnMomentum: '燃烧动量',
+    wow: '周环比',
+    stableVelocity: '稳定速度',
+    priceHistory: 'FBEE 价格历史',
+    pairAnalytics: 'FBEE / USDT 交易对实时分析',
+    holderDistribution: '持有者分布',
+    top50Wallets: '前50钱包集中度',
+    deflationRate: '通缩速率 (30日)',
+    trend30d: '30日趋势',
+    tvlGrowth: 'TVL 增长',
+    weeklyGrowth: '周增长',
+    burnRecords: '燃烧记录',
+    exportCsv: '导出 CSV',
+    time: '时间',
+    amount: '金额',
+    level: '等级',
+    price: '价格',
+    burned: '已燃烧',
+  },
+  en: {
+    networkAnalytics: 'Analytics',
+    analyticsDesc: 'Real-time data visualization of the FBEE deflationary ecosystem and liquidity depth.',
+    totalAddresses: 'Total Addresses',
+    referralPairs: 'Referral Pairs',
+    burnMomentum: 'Burn Momentum',
+    wow: 'WoW',
+    stableVelocity: 'Stable Velocity',
+    priceHistory: 'FBEE Price History',
+    pairAnalytics: 'FBEE / USDT Pair Live Analytics',
+    holderDistribution: 'Holder Distribution',
+    top50Wallets: 'Top 50 Wallets Concentration',
+    deflationRate: 'Deflation Rate (30D)',
+    trend30d: '30D TREND',
+    tvlGrowth: 'TVL Growth',
+    weeklyGrowth: 'WEEKLY GROWTH',
+    burnRecords: 'Burn Records',
+    exportCsv: 'Export CSV',
+    time: 'Time',
+    amount: 'Amount',
+    level: 'Level',
+    price: 'Price',
+    burned: 'Burned',
+  },
+} as const;
+
 type TimePeriod = '1D' | '1W' | '1M';
 
 export default function AnalyticsPage() {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>('1D');
+  const { language } = useLanguage();
+  const t = translations[language];
 
   // Level tag styles
   const getLevelStyle = (level: string) => {
@@ -44,10 +98,10 @@ export default function AnalyticsPage() {
       {/* Header */}
       <header className="mb-8">
         <h1 className="text-3xl lg:text-4xl font-extrabold font-headline tracking-tight text-on-surface mb-2">
-          Network <span className="text-secondary">Analytics</span>
+          Network <span className="text-secondary">{t.networkAnalytics}</span>
         </h1>
         <p className="text-on-surface-variant max-w-2xl">
-          Real-time data visualization of the FBEE deflationary ecosystem and liquidity depth.
+          {t.analyticsDesc}
         </p>
       </header>
 
@@ -58,7 +112,7 @@ export default function AnalyticsPage() {
           <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 blur-3xl group-hover:bg-secondary/20 transition-all" />
           <div className="flex justify-between items-start mb-4">
             <span className="text-on-surface-variant font-label text-sm tracking-widest uppercase">
-              Total Addresses
+              {t.totalAddresses}
             </span>
             <span className="text-secondary text-xl">🔍</span>
           </div>
@@ -66,7 +120,7 @@ export default function AnalyticsPage() {
             <CountUp end={mockAnalyticsData.totalAddresses} separator />
           </div>
           <div className="mt-2 text-tertiary text-xs flex items-center gap-1 font-mono">
-            <span>↗</span> +{mockAnalyticsData.addressGrowth}% WoW
+            <span>↗</span> +{mockAnalyticsData.addressGrowth}% {t.wow}
           </div>
         </GlassCard>
 
@@ -75,7 +129,7 @@ export default function AnalyticsPage() {
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl group-hover:bg-primary/20 transition-all" />
           <div className="flex justify-between items-start mb-4">
             <span className="text-on-surface-variant font-label text-sm tracking-widest uppercase">
-              Referral Pairs
+              {t.referralPairs}
             </span>
             <span className="text-primary text-xl">🔗</span>
           </div>
@@ -83,7 +137,7 @@ export default function AnalyticsPage() {
             <CountUp end={mockAnalyticsData.referralPairs} separator />
           </div>
           <div className="mt-2 text-tertiary text-xs flex items-center gap-1 font-mono">
-            <span>↗</span> +{mockAnalyticsData.referralGrowth}% WoW
+            <span>↗</span> +{mockAnalyticsData.referralGrowth}% {t.wow}
           </div>
         </GlassCard>
 
@@ -92,7 +146,7 @@ export default function AnalyticsPage() {
           <div className="absolute top-0 right-0 w-32 h-32 bg-error/10 blur-3xl group-hover:bg-error/20 transition-all" />
           <div className="flex justify-between items-start mb-4">
             <span className="text-on-surface-variant font-label text-sm tracking-widest uppercase">
-              Burn Momentum (24h)
+              {t.burnMomentum} (24h)
             </span>
             <span className="text-error text-xl">🔥</span>
           </div>
@@ -100,7 +154,7 @@ export default function AnalyticsPage() {
             <CountUp end={mockAnalyticsData.burnMomentum24h} decimals={1} suffix={mockAnalyticsData.burnMomentumUnit} />
           </div>
           <div className="mt-2 text-tertiary text-xs flex items-center gap-1 font-mono">
-            <span>✨</span> Stable Velocity
+            <span>✨</span> {t.stableVelocity}
           </div>
         </GlassCard>
       </div>
@@ -112,8 +166,8 @@ export default function AnalyticsPage() {
           <GlassCard className="!p-8">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
               <div>
-                <h3 className="text-xl font-headline font-bold text-on-surface">FBEE Price History</h3>
-                <p className="text-on-surface-variant text-xs">FBEE / USDT Pair Live Analytics</p>
+                <h3 className="text-xl font-headline font-bold text-on-surface">{t.priceHistory}</h3>
+                <p className="text-on-surface-variant text-xs">{t.pairAnalytics}</p>
               </div>
               <div className="flex bg-surface-container-lowest p-1 rounded-lg">
                 {(['1D', '1W', '1M'] as TimePeriod[]).map((period) => (
@@ -162,7 +216,7 @@ export default function AnalyticsPage() {
                       color: '#F8F9FE',
                     }}
                     labelStyle={{ color: '#A9ABAF' }}
-                    formatter={(value) => [`$${Number(value).toFixed(4)}`, 'Price']}
+                    formatter={(value) => [`$${Number(value).toFixed(4)}`, t.price]}
                   />
                   <Area
                     type="monotone"
@@ -181,8 +235,8 @@ export default function AnalyticsPage() {
         <div className="lg:col-span-4">
           <GlassCard className="!p-8 h-full flex flex-col">
             <div className="mb-6">
-              <h3 className="text-xl font-headline font-bold text-on-surface">Holder Distribution</h3>
-              <p className="text-on-surface-variant text-xs">Top 50 Wallets Concentration</p>
+              <h3 className="text-xl font-headline font-bold text-on-surface">{t.holderDistribution}</h3>
+              <p className="text-on-surface-variant text-xs">{t.top50Wallets}</p>
             </div>
             <div className="flex-1 flex items-center justify-center mb-6">
               <ResponsiveContainer width="100%" height={180}>
@@ -231,7 +285,7 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Deflation Rate Chart */}
         <GlassCard className="!p-8">
-          <h3 className="text-xl font-headline font-bold text-on-surface mb-6">Deflation Rate (30D)</h3>
+          <h3 className="text-xl font-headline font-bold text-on-surface mb-6">{t.deflationRate}</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={mockAnalyticsData.burnHistory}>
@@ -255,7 +309,7 @@ export default function AnalyticsPage() {
                     borderRadius: '8px',
                     color: '#F8F9FE',
                   }}
-                  formatter={(value) => [`${Number(value).toLocaleString()} FBEE`, 'Burned']}
+                  formatter={(value) => [`${Number(value).toLocaleString()} FBEE`, t.burned]}
                 />
                 <Line
                   type="monotone"
@@ -267,12 +321,12 @@ export default function AnalyticsPage() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-[10px] text-outline font-mono mt-4">30D TREND</p>
+          <p className="text-[10px] text-outline font-mono mt-4">{t.trend30d}</p>
         </GlassCard>
 
         {/* TVL Growth Chart */}
         <GlassCard className="!p-8">
-          <h3 className="text-xl font-headline font-bold text-on-surface mb-6">TVL Growth</h3>
+          <h3 className="text-xl font-headline font-bold text-on-surface mb-6">{t.tvlGrowth}</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={mockAnalyticsData.tvlHistory}>
@@ -301,7 +355,7 @@ export default function AnalyticsPage() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-[10px] text-outline font-mono mt-4">WEEKLY GROWTH</p>
+          <p className="text-[10px] text-outline font-mono mt-4">{t.weeklyGrowth}</p>
         </GlassCard>
       </div>
 
@@ -309,19 +363,19 @@ export default function AnalyticsPage() {
       <section>
         <GlassCard className="!p-0 overflow-hidden">
           <div className="p-6 lg:p-8 border-b border-outline-variant/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h3 className="text-xl font-headline font-bold text-on-surface">Burn Records</h3>
+            <h3 className="text-xl font-headline font-bold text-on-surface">{t.burnRecords}</h3>
             <button className="flex items-center gap-2 text-secondary text-sm font-medium hover:underline">
-              Export CSV <span>📥</span>
+              {t.exportCsv} <span>📥</span>
             </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left min-w-[600px]">
               <thead className="bg-surface-container-low text-on-surface-variant font-label text-xs uppercase tracking-widest">
                 <tr>
-                  <th className="px-6 lg:px-8 py-4">Time</th>
+                  <th className="px-6 lg:px-8 py-4">{t.time}</th>
                   <th className="px-6 lg:px-8 py-4">TxHash</th>
-                  <th className="px-6 lg:px-8 py-4">Amount</th>
-                  <th className="px-6 lg:px-8 py-4 text-right">Level</th>
+                  <th className="px-6 lg:px-8 py-4">{t.amount}</th>
+                  <th className="px-6 lg:px-8 py-4 text-right">{t.level}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant/10">

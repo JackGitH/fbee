@@ -6,11 +6,80 @@ import { CountUp } from '@/components/common/CountUp';
 import { GlassCard } from '@/components/common/GlassCard';
 import { Button } from '@/components/common/Button';
 import { mockTradeData, mockProtocolData, generatePriceChartData } from '@/lib/mock-data';
+import { useLanguage } from '@/lib/i18n/context';
+
+// Translations
+const translations = {
+  zh: {
+    vol24h: '24h 交易量',
+    liquidity: '流动性',
+    burned: '已销毁',
+    liveFeed: '实时动态',
+    networkStatus: '网络状态',
+    gasPrice: 'Gas 费用',
+    optimizedRoute: '优化路由',
+    routeDescription: '系统当前通过 PancakeSwap V3 路由以获得最低滑点。',
+    buy: '买入',
+    sell: '卖出',
+    pay: '支付',
+    receive: '获得',
+    balance: '余额',
+    max: '最大',
+    slippageTolerance: '滑点容差',
+    swapFee: '交换手续费',
+    baseExitTax: '基础退出税',
+    dynamicTax: '动态税',
+    buying: '买入中',
+    profit: '盈利',
+    sellingProtocol: '卖出协议',
+    profitSharing: '盈利分成',
+    whaleLimitActive: '巨鲸限制已激活',
+    maxTrade: '最大交易',
+    cooldown: '冷却期',
+    buyFBEE: '买入 FBEE',
+    sellFBEE: '卖出 FBEE',
+    yourRecentSwaps: '您最近的交易',
+    price: '价格',
+  },
+  en: {
+    vol24h: '24h Vol',
+    liquidity: 'Liquidity',
+    burned: 'Burned',
+    liveFeed: 'Live Feed',
+    networkStatus: 'Network Status',
+    gasPrice: 'Gas Price',
+    optimizedRoute: 'Optimized Route',
+    routeDescription: 'System is currently routing through PancakeSwap V3 for lowest slippage.',
+    buy: 'Buy',
+    sell: 'Sell',
+    pay: 'Pay',
+    receive: 'Receive',
+    balance: 'Balance',
+    max: 'Max',
+    slippageTolerance: 'Slippage Tolerance',
+    swapFee: 'Swap Fee',
+    baseExitTax: 'Base Exit Tax',
+    dynamicTax: 'Dynamic Tax',
+    buying: 'Buying',
+    profit: 'Profit',
+    sellingProtocol: 'Selling Protocol',
+    profitSharing: 'Profit Sharing',
+    whaleLimitActive: 'Whale Limit Active',
+    maxTrade: 'Max trade',
+    cooldown: 'Cooldown',
+    buyFBEE: 'Buy FBEE',
+    sellFBEE: 'Sell FBEE',
+    yourRecentSwaps: 'Your Recent Swaps',
+    price: 'Price',
+  }
+};
 
 type TimeFrame = '1H' | '4H' | '1D' | '1W';
 type TradeMode = 'buy' | 'sell';
 
 export default function TradePage() {
+  const { language } = useLanguage();
+  const t = translations[language];
   const [timeFrame, setTimeFrame] = useState<TimeFrame>('4H');
   const [tradeMode, setTradeMode] = useState<TradeMode>('buy');
   const [inputAmount, setInputAmount] = useState<string>('');
@@ -79,19 +148,19 @@ export default function TradePage() {
             {/* Stats Pills */}
             <div className="flex gap-2 flex-wrap">
               <div className="glass-card px-4 py-2 rounded-xl text-center">
-                <p className="text-[10px] text-[#737679] uppercase tracking-widest font-bold">24h Vol</p>
+                <p className="text-[10px] text-[#737679] uppercase tracking-widest font-bold">{t.vol24h}</p>
                 <p className="font-mono text-sm font-semibold">
                   $<CountUp end={mockTradeData.volume24h / 1000000} decimals={2} suffix="M" />
                 </p>
               </div>
               <div className="glass-card px-4 py-2 rounded-xl text-center">
-                <p className="text-[10px] text-[#737679] uppercase tracking-widest font-bold">Liquidity</p>
+                <p className="text-[10px] text-[#737679] uppercase tracking-widest font-bold">{t.liquidity}</p>
                 <p className="font-mono text-sm font-semibold">
                   $<CountUp end={mockTradeData.liquidity / 1000000} decimals={1} suffix="M" />
                 </p>
               </div>
               <div className="glass-card px-4 py-2 rounded-xl text-center">
-                <p className="text-[10px] text-[#737679] uppercase tracking-widest font-bold">Burned</p>
+                <p className="text-[10px] text-[#737679] uppercase tracking-widest font-bold">{t.burned}</p>
                 <p className="font-mono text-sm font-semibold text-error">
                   <CountUp end={mockProtocolData.burnProgress} suffix="%" />
                 </p>
@@ -155,7 +224,7 @@ export default function TradePage() {
                       fontSize: '12px',
                     }}
                     labelStyle={{ color: '#737679' }}
-                    formatter={(value) => [`$${Number(value).toFixed(4)}`, 'Price']}
+                    formatter={(value) => [`$${Number(value).toFixed(4)}`, t.price]}
                   />
                   <Area
                     type="monotone"
@@ -174,7 +243,7 @@ export default function TradePage() {
             {/* Live Feed */}
             <GlassCard className="rounded-2xl">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="font-['Space_Grotesk'] text-lg font-bold">Live Feed</h3>
+                <h3 className="font-['Space_Grotesk'] text-lg font-bold">{t.liveFeed}</h3>
                 <span className="flex h-2 w-2 rounded-full bg-tertiary animate-pulse"></span>
               </div>
               <div className="space-y-4">
@@ -210,10 +279,10 @@ export default function TradePage() {
             {/* Network Status */}
             <GlassCard className="rounded-2xl flex flex-col justify-between">
               <div>
-                <h3 className="font-['Space_Grotesk'] text-lg font-bold mb-4">Network Status</h3>
+                <h3 className="font-['Space_Grotesk'] text-lg font-bold mb-4">{t.networkStatus}</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-[#a9abaf]">Gas Price</span>
+                    <span className="text-sm text-[#a9abaf]">{t.gasPrice}</span>
                     <span className="font-mono text-secondary">
                       {mockTradeData.networkStatus.gasPrice} Gwei
                     </span>
@@ -230,10 +299,10 @@ export default function TradePage() {
                   <svg className="w-4 h-4 text-secondary" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19 9l-7 7-7-7" />
                   </svg>
-                  <p className="text-xs font-bold text-secondary uppercase tracking-widest">Optimized Route</p>
+                  <p className="text-xs font-bold text-secondary uppercase tracking-widest">{t.optimizedRoute}</p>
                 </div>
                 <p className="text-xs text-[#e8fbff] opacity-80 leading-relaxed">
-                  System is currently routing through PancakeSwap V3 for lowest slippage.
+                  {t.routeDescription}
                 </p>
               </div>
             </GlassCard>
@@ -253,7 +322,7 @@ export default function TradePage() {
                     : 'text-[#737679] hover:text-on-surface'
                 }`}
               >
-                Buy
+                {t.buy}
               </button>
               <button
                 onClick={() => setTradeMode('sell')}
@@ -263,7 +332,7 @@ export default function TradePage() {
                     : 'text-[#737679] hover:text-on-surface'
                 }`}
               >
-                Sell
+                {t.sell}
               </button>
             </div>
 
@@ -272,9 +341,9 @@ export default function TradePage() {
               {/* Input: You Pay */}
               <div className="space-y-2">
                 <div className="flex justify-between text-xs font-bold px-1">
-                  <span className="text-[#a9abaf] uppercase tracking-wider">Pay</span>
+                  <span className="text-[#a9abaf] uppercase tracking-wider">{t.pay}</span>
                   <span className="text-[#737679]">
-                    Balance: {tradeMode === 'buy' ? '1,420.50 USDT' : '45,680.50 FBEE'}
+                    {t.balance}: {tradeMode === 'buy' ? '1,420.50 USDT' : '45,680.50 FBEE'}
                   </span>
                 </div>
                 <div className="relative">
@@ -293,7 +362,7 @@ export default function TradePage() {
                       onClick={() => setInputAmount(tradeMode === 'buy' ? '1420.50' : '45680.50')}
                       className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded hover:bg-primary/20 transition-colors uppercase"
                     >
-                      Max
+                      {t.max}
                     </button>
                     <div className="flex items-center gap-2 pl-2 border-l border-[#45484c]">
                       <span className="font-bold text-sm">{tradeMode === 'buy' ? 'USDT' : 'FBEE'}</span>
@@ -317,9 +386,9 @@ export default function TradePage() {
               {/* Output: You Receive */}
               <div className="space-y-2">
                 <div className="flex justify-between text-xs font-bold px-1">
-                  <span className="text-[#a9abaf] uppercase tracking-wider">Receive</span>
+                  <span className="text-[#a9abaf] uppercase tracking-wider">{t.receive}</span>
                   <span className="text-[#737679]">
-                    Balance: {tradeMode === 'buy' ? '0 FBEE' : '12,500.00 USDT'}
+                    {t.balance}: {tradeMode === 'buy' ? '0 FBEE' : '12,500.00 USDT'}
                   </span>
                 </div>
                 <div className="relative">
@@ -339,7 +408,7 @@ export default function TradePage() {
 
             {/* Slippage Settings */}
             <div className="mt-6">
-              <p className="text-xs text-[#a9abaf] mb-2">Slippage Tolerance</p>
+              <p className="text-xs text-[#a9abaf] mb-2">{t.slippageTolerance}</p>
               <div className="flex gap-2">
                 {slippageOptions.map((opt) => (
                   <button
@@ -361,7 +430,7 @@ export default function TradePage() {
             <div className="mt-6 space-y-3">
               <div className="flex justify-between items-center text-xs">
                 <span className="text-[#a9abaf]">
-                  {tradeMode === 'buy' ? `Swap Fee (${mockTradeData.buyFee}%)` : 'Base Exit Tax'}
+                  {tradeMode === 'buy' ? `${t.swapFee} (${mockTradeData.buyFee}%)` : t.baseExitTax}
                 </span>
                 <span className="font-mono text-on-surface">
                   {tradeMode === 'buy' 
@@ -371,26 +440,26 @@ export default function TradePage() {
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-[#a9abaf]">Dynamic Tax</span>
+                <span className="text-[#a9abaf]">{t.dynamicTax}</span>
                 <span className={`font-mono ${tradeMode === 'buy' ? 'text-tertiary' : 'text-error'}`}>
-                  {tradeMode === 'buy' ? '0% (Buying)' : `${mockTradeData.profitTax}% (Profit)`}
+                  {tradeMode === 'buy' ? `0% (${t.buying})` : `${mockTradeData.profitTax}% (${t.profit})`}
                 </span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-[#a9abaf]">Slippage Tolerance</span>
+                <span className="text-[#a9abaf]">{t.slippageTolerance}</span>
                 <span className="font-mono text-secondary">{slippage}%</span>
               </div>
 
               {/* Selling Protocol Info */}
               <div className="p-4 bg-surface-container-highest/50 rounded-xl border border-[#45484c]/30 mt-4">
-                <p className="text-[10px] font-bold text-[#737679] uppercase tracking-widest mb-2">Selling Protocol</p>
+                <p className="text-[10px] font-bold text-[#737679] uppercase tracking-widest mb-2">{t.sellingProtocol}</p>
                 <ul className="text-[11px] space-y-1.5 text-[#a9abaf]">
                   <li className="flex justify-between">
-                    <span>Base Exit Tax</span>
+                    <span>{t.baseExitTax}</span>
                     <span className="text-on-surface">{mockTradeData.baseSellTax}%</span>
                   </li>
                   <li className="flex justify-between">
-                    <span>Profit Sharing</span>
+                    <span>{t.profitSharing}</span>
                     <span className="text-on-surface">{mockTradeData.profitTax}%</span>
                   </li>
                 </ul>
@@ -408,17 +477,17 @@ export default function TradePage() {
                   </svg>
                   <div className="flex-1">
                     <p className={`text-xs font-bold ${exceedsWhaleLimit ? 'text-error' : 'text-error/80'}`}>
-                      Whale Limit Active
+                      {t.whaleLimitActive}
                     </p>
                     <p className="text-[10px] text-[#ffd2c8] opacity-70">
-                      Max trade: {mockTradeData.whaleLimit.toLocaleString()} USDT
+                      {t.maxTrade}: {mockTradeData.whaleLimit.toLocaleString()} USDT
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs font-mono font-bold text-error">
                       00:{cooldown.toString().padStart(2, '0')}
                     </p>
-                    <p className="text-[9px] text-[#737679] uppercase">Cooldown</p>
+                    <p className="text-[9px] text-[#737679] uppercase">{t.cooldown}</p>
                   </div>
                 </div>
               )}
@@ -432,7 +501,7 @@ export default function TradePage() {
               className="mt-6 py-4 rounded-2xl text-lg"
               disabled={exceedsWhaleLimit && tradeMode === 'sell'}
             >
-              {tradeMode === 'buy' ? 'Buy FBEE' : 'Sell FBEE'}
+              {tradeMode === 'buy' ? t.buyFBEE : t.sellFBEE}
             </Button>
           </GlassCard>
 
@@ -442,7 +511,7 @@ export default function TradePage() {
               <svg className="w-5 h-5 text-[#737679]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-sm font-medium">Your Recent Swaps</span>
+              <span className="text-sm font-medium">{t.yourRecentSwaps}</span>
             </div>
             <svg className="w-5 h-5 text-[#737679]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

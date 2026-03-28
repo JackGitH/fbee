@@ -5,8 +5,74 @@ import { GlassCard } from '@/components/common/GlassCard';
 import { CountUp } from '@/components/common/CountUp';
 import { Button } from '@/components/common/Button';
 import { mockPredictionData } from '@/lib/mock-data';
+import { useLanguage } from '@/lib/i18n/context';
+
+const translations = {
+  zh: {
+    availablePower: '可用算力',
+    predictionVouchers: '预测卷',
+    getMoreVouchers: '获取更多',
+    viewHistory: '查看历史',
+    globalPredictions: '全球预测总数',
+    totalDistributed: '累计分发',
+    activeEvents: '活跃事件',
+    activeEventsDesc: '预测市场趋势赢取高额奖励',
+    liveNow: '进行中',
+    highStakes: '高赌注',
+    new: '新',
+    endingSoon: '即将结束',
+    enter: '参与',
+    voucher: '预测卷',
+    participationHistory: '参与历史',
+    viewAll: '查看全部',
+    event: '事件',
+    result: '结果',
+    won: '获胜',
+    reward: '奖励',
+    howToGetTickets: '如何获取预测卷',
+    step1Title: '存入 BNB 获得预测卷',
+    step1Desc: '每存入 0.1 ETH 到流动性池即可获得 1 张预测卷。',
+    step2Title: '每 0.5 BNB = 1 张预测卷',
+    step2Desc: '平仓 3 倍杠杆头寸可获得 5 张额外预测卷。',
+    step3Title: '使用预测卷参与预测事件',
+    step3Desc: '赢得预测事件有 20% 概率返还入场预测卷。',
+    readDocs: '查看文档',
+  },
+  en: {
+    availablePower: 'Available Power',
+    predictionVouchers: 'Prediction Vouchers',
+    getMoreVouchers: 'Get More Vouchers',
+    viewHistory: 'View History',
+    globalPredictions: 'Global Predictions',
+    totalDistributed: 'Total Distributed',
+    activeEvents: 'Active Events',
+    activeEventsDesc: 'Predict market trends to win high-yield rewards',
+    liveNow: 'Live Now',
+    highStakes: 'High Stakes',
+    new: 'New',
+    endingSoon: 'Ending Soon',
+    enter: 'Enter',
+    voucher: 'Voucher',
+    participationHistory: 'Participation History',
+    viewAll: 'View All',
+    event: 'Event',
+    result: 'Result',
+    won: 'Won',
+    reward: 'Reward',
+    howToGetTickets: 'How to Get Tickets',
+    step1Title: 'Deposit BNB to earn tickets',
+    step1Desc: 'Receive 1 voucher for every 0.1 ETH deposited into liquidity pools.',
+    step2Title: 'Each 0.5 BNB = 1 ticket',
+    step2Desc: 'Closing a 3x leveraged position earns you 5 bonus vouchers.',
+    step3Title: 'Use tickets to predict events',
+    step3Desc: 'Winning a prediction event grants a 20% chance to refund your entry voucher.',
+    readDocs: 'Read Docs',
+  },
+};
 
 export default function PredictionPage() {
+  const { language } = useLanguage();
+  const t = translations[language];
   const [countdowns, setCountdowns] = useState<{ [key: number]: number }>({});
 
   // Initialize countdowns
@@ -61,13 +127,13 @@ export default function PredictionPage() {
         <GlassCard className="lg:col-span-2 relative overflow-hidden min-h-[240px] flex flex-col justify-between">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -mr-32 -mt-32"></div>
           <div className="relative z-10">
-            <h2 className="text-on-surface-variant font-label uppercase tracking-widest text-xs mb-2">Available Power</h2>
+            <h2 className="text-on-surface-variant font-label uppercase tracking-widest text-xs mb-2">{t.availablePower}</h2>
             <div className="flex items-baseline gap-3">
               <CountUp 
                 end={mockPredictionData.ticketBalance} 
                 className="text-5xl font-display font-bold text-primary glow-primary tracking-tight"
               />
-              <span className="text-xl font-display text-on-surface-variant">Prediction Vouchers</span>
+              <span className="text-xl font-display text-on-surface-variant">{t.predictionVouchers}</span>
             </div>
           </div>
           <div className="relative z-10 flex flex-wrap gap-4 mt-6">
@@ -75,16 +141,16 @@ export default function PredictionPage() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Get More Vouchers
+              {t.getMoreVouchers}
             </Button>
-            <Button variant="secondary" size="lg">View History</Button>
+            <Button variant="secondary" size="lg">{t.viewHistory}</Button>
           </div>
         </GlassCard>
 
         {/* Global Stats Card */}
         <GlassCard className="flex flex-col justify-center gap-6 border-l-4 border-l-secondary">
           <div>
-            <h3 className="text-on-surface-variant font-label uppercase tracking-widest text-xs mb-1">Global Predictions</h3>
+            <h3 className="text-on-surface-variant font-label uppercase tracking-widest text-xs mb-1">{t.globalPredictions}</h3>
             <CountUp 
               end={mockPredictionData.globalPredictions} 
               decimals={1}
@@ -93,7 +159,7 @@ export default function PredictionPage() {
             />
           </div>
           <div>
-            <h3 className="text-on-surface-variant font-label uppercase tracking-widest text-xs mb-1">Total Distributed</h3>
+            <h3 className="text-on-surface-variant font-label uppercase tracking-widest text-xs mb-1">{t.totalDistributed}</h3>
             <CountUp 
               end={mockPredictionData.totalDistributed} 
               decimals={1}
@@ -108,13 +174,13 @@ export default function PredictionPage() {
       <section className="space-y-6">
         <div className="flex justify-between items-end">
           <div className="space-y-1">
-            <h2 className="text-3xl font-display font-bold text-on-surface">Active Events</h2>
-            <p className="text-on-surface-variant text-sm">Predict market trends to win high-yield rewards</p>
+            <h2 className="text-3xl font-display font-bold text-on-surface">{t.activeEvents}</h2>
+            <p className="text-on-surface-variant text-sm">{t.activeEventsDesc}</p>
           </div>
           <div className="flex gap-2">
             <span className="px-3 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-bold uppercase tracking-tighter flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-              Live Now
+              {t.liveNow}
             </span>
           </div>
         </div>
@@ -134,13 +200,13 @@ export default function PredictionPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
                   <div className="absolute bottom-4 left-4 flex gap-2">
                     {index === 0 && (
-                      <span className="bg-surface-container-lowest/80 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-secondary uppercase tracking-widest">High Stakes</span>
+                      <span className="bg-surface-container-lowest/80 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-secondary uppercase tracking-widest">{t.highStakes}</span>
                     )}
                     {index === 1 && (
-                      <span className="bg-surface-container-lowest/80 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-tertiary uppercase tracking-widest">New</span>
+                      <span className="bg-surface-container-lowest/80 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-tertiary uppercase tracking-widest">{t.new}</span>
                     )}
                     {index === 2 && (
-                      <span className="bg-surface-container-lowest/80 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-error uppercase tracking-widest">Ending Soon</span>
+                      <span className="bg-surface-container-lowest/80 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-error uppercase tracking-widest">{t.endingSoon}</span>
                     )}
                   </div>
                 </div>
@@ -176,8 +242,8 @@ export default function PredictionPage() {
                   </div>
 
                   <button className="w-full py-3 bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-all rounded-xl font-bold flex justify-center items-center gap-2 border border-outline-variant/20 active:scale-95 group-hover:box-glow-primary">
-                    Enter
-                    <span className="text-xs opacity-60 font-normal">(1 Voucher)</span>
+                    {t.enter}
+                    <span className="text-xs opacity-60 font-normal">(1 {t.voucher})</span>
                   </button>
                 </div>
               </GlassCard>
@@ -191,8 +257,8 @@ export default function PredictionPage() {
         {/* Participation History */}
         <GlassCard className="lg:col-span-3 space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-display font-bold">Participation History</h2>
-            <button className="text-secondary text-sm font-bold uppercase tracking-widest hover:underline transition-all">View All</button>
+            <h2 className="text-2xl font-display font-bold">{t.participationHistory}</h2>
+            <button className="text-secondary text-sm font-bold uppercase tracking-widest hover:underline transition-all">{t.viewAll}</button>
           </div>
 
           {/* History Table */}
@@ -200,10 +266,10 @@ export default function PredictionPage() {
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-outline-variant/10">
-                  <th className="pb-3 text-xs uppercase tracking-widest text-on-surface-variant font-bold">Event</th>
-                  <th className="pb-3 text-xs uppercase tracking-widest text-on-surface-variant font-bold">Result</th>
-                  <th className="pb-3 text-xs uppercase tracking-widest text-on-surface-variant font-bold">Won</th>
-                  <th className="pb-3 text-xs uppercase tracking-widest text-on-surface-variant font-bold text-right">Reward</th>
+                  <th className="pb-3 text-xs uppercase tracking-widest text-on-surface-variant font-bold">{t.event}</th>
+                  <th className="pb-3 text-xs uppercase tracking-widest text-on-surface-variant font-bold">{t.result}</th>
+                  <th className="pb-3 text-xs uppercase tracking-widest text-on-surface-variant font-bold">{t.won}</th>
+                  <th className="pb-3 text-xs uppercase tracking-widest text-on-surface-variant font-bold text-right">{t.reward}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant/10">
@@ -251,34 +317,34 @@ export default function PredictionPage() {
         {/* How to Get Tickets Guide */}
         <GlassCard className="lg:col-span-2 flex flex-col justify-between bg-gradient-to-br from-surface-container-low to-surface-container-highest">
           <div className="space-y-6">
-            <h2 className="text-2xl font-display font-bold">How to Get Tickets</h2>
+            <h2 className="text-2xl font-display font-bold">{t.howToGetTickets}</h2>
             <div className="space-y-6">
               <div className="flex gap-4">
                 <div className="mt-1 w-6 h-6 shrink-0 rounded bg-primary text-on-primary flex items-center justify-center text-xs font-bold">1</div>
                 <div>
-                  <p className="font-bold text-on-surface">Deposit BNB to earn tickets</p>
-                  <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">Receive 1 voucher for every 0.1 ETH deposited into liquidity pools.</p>
+                  <p className="font-bold text-on-surface">{t.step1Title}</p>
+                  <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">{t.step1Desc}</p>
                 </div>
               </div>
               <div className="flex gap-4">
                 <div className="mt-1 w-6 h-6 shrink-0 rounded bg-secondary text-on-secondary flex items-center justify-center text-xs font-bold">2</div>
                 <div>
-                  <p className="font-bold text-on-surface">Each 0.5 BNB = 1 ticket</p>
-                  <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">Closing a 3x leveraged position earns you 5 bonus vouchers.</p>
+                  <p className="font-bold text-on-surface">{t.step2Title}</p>
+                  <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">{t.step2Desc}</p>
                 </div>
               </div>
               <div className="flex gap-4">
                 <div className="mt-1 w-6 h-6 shrink-0 rounded bg-tertiary text-on-tertiary flex items-center justify-center text-xs font-bold">3</div>
                 <div>
-                  <p className="font-bold text-on-surface">Use tickets to predict events</p>
-                  <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">Winning a prediction event grants a 20% chance to refund your entry voucher.</p>
+                  <p className="font-bold text-on-surface">{t.step3Title}</p>
+                  <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">{t.step3Desc}</p>
                 </div>
               </div>
             </div>
           </div>
           <div className="mt-8 pt-6 border-t border-outline-variant/10">
             <a className="flex items-center justify-between text-secondary hover:text-white transition-all group cursor-pointer" href="#">
-              <span className="text-sm font-bold uppercase tracking-widest">Read Docs</span>
+              <span className="text-sm font-bold uppercase tracking-widest">{t.readDocs}</span>
               <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>

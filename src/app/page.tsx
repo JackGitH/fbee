@@ -6,6 +6,83 @@ import { CountUp } from '@/components/common/CountUp';
 import { GlassCard } from '@/components/common/GlassCard';
 import { Button } from '@/components/common/Button';
 import { mockProtocolData } from '@/lib/mock-data';
+import { useLanguage } from '@/lib/i18n/context';
+
+// Translations
+const translations = {
+  zh: {
+    priceIndex: '价格指数',
+    totalPool: '底池总量',
+    liquidityDepth: '流动性深度：高',
+    deflationProtocol: '通缩协议',
+    target: '目标',
+    burned: '已销毁',
+    circulation: '流通量',
+    currentProgress: '当前进度：{progress}% 的总供应量已从流通中移除',
+    systematicBurnPortal: '系统化燃烧门户',
+    nextCycleIn: '下次燃烧',
+    batches: '批次',
+    dailyBurnCapacity: '每日目标燃烧容量已激活。检测到高网络压力。',
+    todayTotalBurned: '今日总销毁',
+    lastTransactionBurn: '最后交易销毁',
+    entryQuota: '入场配额',
+    todayEntryLimit: '今日入场限额',
+    slotsRemaining: '{slots} 个名额可用于今日新资金注入。全局限额将在 8 小时 12 分后重置。',
+    requestEntrySlot: '申请入场名额',
+    ecosystemHub: '生态系统中心',
+    miningPortal: '入金挖矿',
+    earnYield: '赚取收益',
+    inviteFriends: '邀请好友',
+    tenPercentRewards: '10% 奖励',
+    tradeFBEE: '交易 FBEE',
+    zeroSlippage: '零滑点',
+    viewEarnings: '查看收益',
+    history: '历史',
+    liveProtocolIntelligence: '实时协议智能',
+    heroTitle: '去中心化稀缺性，\n由代码强制执行。',
+    heroDescription: 'FBEE 采用激进的算法燃烧机制。每次交易和入金，都会有一部分被永久移除，推动价格向 3.6 亿均衡点靠拢。',
+    exploreWhitepaper: '探索白皮书',
+    audits: '审计报告',
+    verifiedContract: '已验证合约',
+    stable: '稳定',
+  },
+  en: {
+    priceIndex: 'Price Index',
+    totalPool: 'Total Pool',
+    liquidityDepth: 'Liquidity Depth: High',
+    deflationProtocol: 'Deflation Protocol',
+    target: 'Target',
+    burned: 'Burned',
+    circulation: 'Circulation',
+    currentProgress: 'Current Progress: {progress}% of total supply removed from circulation',
+    systematicBurnPortal: 'Systematic Burn Portal',
+    nextCycleIn: 'Next Cycle In',
+    batches: 'Batches',
+    dailyBurnCapacity: 'Daily target burn capacity active. High network pressure detected.',
+    todayTotalBurned: "Today's Total Burned",
+    lastTransactionBurn: 'Last Transaction Burn',
+    entryQuota: 'Entry Quota',
+    todayEntryLimit: "Today's Entry Limit",
+    slotsRemaining: '{slots} slots remaining for new capital injections today. Global limit resets in 8h 12m.',
+    requestEntrySlot: 'Request Entry Slot',
+    ecosystemHub: 'Ecosystem Hub',
+    miningPortal: 'Mining Portal',
+    earnYield: 'Earn Yield',
+    inviteFriends: 'Invite Friends',
+    tenPercentRewards: '10% Rewards',
+    tradeFBEE: 'Trade FBEE',
+    zeroSlippage: 'Zero Slippage',
+    viewEarnings: 'View Earnings',
+    history: 'History',
+    liveProtocolIntelligence: 'Live Protocol Intelligence',
+    heroTitle: 'Decentralized scarcity,\nenforced by code.',
+    heroDescription: 'FBEE utilizes an aggressive algorithmic burn mechanism. For every trade and deposit, a portion is permanently removed, pushing the price toward the 360M equilibrium.',
+    exploreWhitepaper: 'Explore Whitepaper',
+    audits: 'Audits',
+    verifiedContract: 'VERIFIED CONTRACT',
+    stable: 'STABLE',
+  }
+};
 
 // Countdown timer hook
 function useCountdown(initialSeconds: number) {
@@ -25,56 +102,42 @@ function useCountdown(initialSeconds: number) {
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
-// Quick action items
-const quickActions = [
-  {
-    title: 'Mining Portal',
-    subtitle: 'Earn Yield',
-    href: '/mining',
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    ),
-    color: 'primary',
-  },
-  {
-    title: 'Invite Friends',
-    subtitle: '10% Rewards',
-    href: '/referral',
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
-    color: 'secondary',
-  },
-  {
-    title: 'Trade FBEE',
-    subtitle: 'Zero Slippage',
-    href: '/trade',
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-      </svg>
-    ),
-    color: 'tertiary',
-  },
-  {
-    title: 'View Earnings',
-    subtitle: 'History',
-    href: '/profile',
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-      </svg>
-    ),
-    color: 'neutral',
-  },
-];
+// Quick action icons
+const quickActionIcons = {
+  mining: (
+    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  ),
+  referral: (
+    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+  ),
+  trade: (
+    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+    </svg>
+  ),
+  profile: (
+    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+    </svg>
+  ),
+};
 
 export default function Dashboard() {
+  const { language } = useLanguage();
+  const t = translations[language];
+
+  // Quick action items with translations
+  const quickActions = [
+    { titleKey: 'miningPortal', subtitleKey: 'earnYield', href: '/mining', icon: quickActionIcons.mining, color: 'primary' },
+    { titleKey: 'inviteFriends', subtitleKey: 'tenPercentRewards', href: '/referral', icon: quickActionIcons.referral, color: 'secondary' },
+    { titleKey: 'tradeFBEE', subtitleKey: 'zeroSlippage', href: '/trade', icon: quickActionIcons.trade, color: 'tertiary' },
+    { titleKey: 'viewEarnings', subtitleKey: 'history', href: '/profile', icon: quickActionIcons.profile, color: 'neutral' },
+  ];
   const countdown = useCountdown(mockProtocolData.nextBurnCountdown);
   const burnPercentage = (mockProtocolData.todayBurnCount / 24) * 100;
   const depositPercentage = (mockProtocolData.dailyDepositCount / mockProtocolData.dailyDepositLimit) * 100;
@@ -90,7 +153,7 @@ export default function Dashboard() {
         {/* Price Index Card */}
         <div className="glass-card p-6 lg:p-8 rounded-xl flex flex-col justify-between border-l-4 border-l-primary shadow-lg">
           <div className="flex justify-between items-start">
-            <span className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">Price Index</span>
+            <span className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">{t.priceIndex}</span>
             <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -108,7 +171,7 @@ export default function Dashboard() {
         {/* Total Pool Card */}
         <div className="glass-card p-6 lg:p-8 rounded-xl flex flex-col justify-between border-l-4 border-l-secondary shadow-lg">
           <div className="flex justify-between items-start">
-            <span className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">Total Pool</span>
+            <span className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">{t.totalPool}</span>
             <div className="bg-secondary/10 px-2 py-0.5 rounded text-[10px] font-bold text-secondary border border-secondary/20">
               SLOT 0{mockProtocolData.currentSlot}
             </div>
@@ -117,23 +180,23 @@ export default function Dashboard() {
             <h2 className="text-3xl lg:text-4xl font-black font-display text-secondary glow-secondary">
               <CountUp end={mockProtocolData.totalPoolU} prefix="$" separator={true} duration={2500} />
             </h2>
-            <p className="text-on-surface-variant text-xs mt-1 font-medium">Liquidity Depth: High</p>
+            <p className="text-on-surface-variant text-xs mt-1 font-medium">{t.liquidityDepth}</p>
           </div>
         </div>
 
         {/* Deflation Protocol Card */}
         <div className="glass-card p-6 lg:p-8 rounded-xl col-span-1 md:col-span-2 space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">Deflation Protocol</span>
-            <span className="text-xs font-mono text-tertiary">Target: {(mockProtocolData.totalSupply / 1000000).toFixed(0)}M FBEE</span>
+            <span className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">{t.deflationProtocol}</span>
+            <span className="text-xs font-mono text-tertiary">{t.target}: {(mockProtocolData.totalSupply / 1000000).toFixed(0)}M FBEE</span>
           </div>
           <div className="space-y-3">
             <div className="flex justify-between text-xs font-mono">
               <span className="text-on-surface-variant">
-                Burned: <CountUp end={mockProtocolData.totalBurned / 1000000} decimals={1} suffix="M" duration={2500} />
+                {t.burned}: <CountUp end={mockProtocolData.totalBurned / 1000000} decimals={1} suffix="M" duration={2500} />
               </span>
               <span className="text-on-surface">
-                Circulation: <CountUp end={mockProtocolData.circulatingSupply / 1000000} decimals={1} suffix="M" duration={2500} />
+                {t.circulation}: <CountUp end={mockProtocolData.circulatingSupply / 1000000} decimals={1} suffix="M" duration={2500} />
               </span>
             </div>
             <div className="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden border border-outline-variant/10">
@@ -143,7 +206,7 @@ export default function Dashboard() {
               />
             </div>
             <p className="text-[10px] text-center text-outline uppercase tracking-tight">
-              Current Progress: {mockProtocolData.burnProgress}% of total supply removed from circulation
+              {t.currentProgress.replace('{progress}', String(mockProtocolData.burnProgress))}
             </p>
           </div>
         </div>
@@ -159,10 +222,10 @@ export default function Dashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
               </svg>
-              <h3 className="font-display font-bold text-lg tracking-tight">Systematic Burn Portal</h3>
+              <h3 className="font-display font-bold text-lg tracking-tight">{t.systematicBurnPortal}</h3>
             </div>
             <div className="text-right">
-              <span className="text-[10px] block text-outline uppercase tracking-widest">Next Cycle In</span>
+              <span className="text-[10px] block text-outline uppercase tracking-widest">{t.nextCycleIn}</span>
               <span className="text-xl font-black font-display text-error tabular-nums glow-error">{countdown}</span>
             </div>
           </div>
@@ -194,18 +257,18 @@ export default function Dashboard() {
                   <span className="text-3xl font-black font-display text-error glow-error">
                     <CountUp end={mockProtocolData.todayBurnCount} duration={2000} />/24
                   </span>
-                  <span className="text-[10px] text-on-surface-variant uppercase tracking-widest">Batches</span>
+                  <span className="text-[10px] text-on-surface-variant uppercase tracking-widest">{t.batches}</span>
                 </div>
               </div>
               <p className="text-center text-sm text-on-surface-variant">
-                Daily target burn capacity active. High network pressure detected.
+                {t.dailyBurnCapacity}
               </p>
             </div>
 
             {/* Burn Stats */}
             <div className="flex flex-col justify-center space-y-4">
               <div className="bg-surface-container-highest/50 p-4 rounded-xl border border-outline-variant/10">
-                <span className="text-[10px] text-outline uppercase tracking-widest block mb-1">Today&apos;s Total Burned</span>
+                <span className="text-[10px] text-outline uppercase tracking-widest block mb-1">{t.todayTotalBurned}</span>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-black font-display text-on-surface">
                     <CountUp end={1420550} separator={true} duration={2500} />
@@ -214,7 +277,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="bg-surface-container-highest/50 p-4 rounded-xl border border-outline-variant/10">
-                <span className="text-[10px] text-outline uppercase tracking-widest block mb-1">Last Transaction Burn</span>
+                <span className="text-[10px] text-outline uppercase tracking-widest block mb-1">{t.lastTransactionBurn}</span>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-black font-display text-tertiary glow-tertiary">
                     <CountUp end={12400} separator={true} duration={2000} />
@@ -236,8 +299,8 @@ export default function Dashboard() {
             </div>
             <div className="relative z-10 space-y-6">
               <div>
-                <h3 className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">Entry Quota</h3>
-                <h4 className="text-xl lg:text-2xl font-bold font-display mt-1">Today&apos;s Entry Limit</h4>
+                <h3 className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">{t.entryQuota}</h3>
+                <h4 className="text-xl lg:text-2xl font-bold font-display mt-1">{t.todayEntryLimit}</h4>
               </div>
               
               <div className="flex items-center gap-6">
@@ -256,11 +319,11 @@ export default function Dashboard() {
               </div>
 
               <p className="text-sm text-on-surface-variant leading-relaxed">
-                {mockProtocolData.dailyRemainingSlots} slots remaining for new capital injections today. Global limit resets in 8h 12m.
+                {t.slotsRemaining.replace('{slots}', String(mockProtocolData.dailyRemainingSlots))}
               </p>
 
               <button className="w-full bg-surface-container-highest border border-outline-variant/30 py-4 rounded-xl font-bold text-secondary hover:bg-secondary hover:text-surface transition-all duration-300">
-                Request Entry Slot
+                {t.requestEntrySlot}
               </button>
             </div>
           </div>
@@ -269,7 +332,7 @@ export default function Dashboard() {
 
       {/* Ecosystem Hub */}
       <section className="space-y-6">
-        <h3 className="font-display font-bold text-xl tracking-tight px-2">Ecosystem Hub</h3>
+        <h3 className="font-display font-bold text-xl tracking-tight px-2">{t.ecosystemHub}</h3>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action) => (
             <Link key={action.href} href={action.href}>
@@ -291,8 +354,8 @@ export default function Dashboard() {
                   {action.icon}
                 </div>
                 <div>
-                  <span className="block font-bold font-display text-on-surface">{action.title}</span>
-                  <span className="text-[10px] text-outline uppercase tracking-widest">{action.subtitle}</span>
+                  <span className="block font-bold font-display text-on-surface">{t[action.titleKey as keyof typeof t]}</span>
+                  <span className="text-[10px] text-outline uppercase tracking-widest">{t[action.subtitleKey as keyof typeof t]}</span>
                 </div>
               </GlassCard>
             </Link>
@@ -306,20 +369,20 @@ export default function Dashboard() {
         <div className="flex flex-col md:flex-row gap-8 lg:gap-12 items-center p-6 md:p-12 lg:p-16">
           <div className="flex-1 space-y-6">
             <span className="inline-block bg-primary/20 text-primary px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
-              Live Protocol Intelligence
+              {t.liveProtocolIntelligence}
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black font-display leading-tight">
-              Decentralized scarcity,<br />enforced by code.
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black font-display leading-tight whitespace-pre-line">
+              {t.heroTitle}
             </h2>
             <p className="text-on-surface-variant text-base lg:text-lg leading-relaxed max-w-xl">
-              FBEE utilizes an aggressive algorithmic burn mechanism. For every trade and deposit, a portion is permanently removed, pushing the price toward the 360M equilibrium.
+              {t.heroDescription}
             </p>
             <div className="flex flex-wrap gap-4">
               <Button variant="primary" size="lg">
-                Explore Whitepaper
+                {t.exploreWhitepaper}
               </Button>
               <Button variant="ghost" size="lg" className="border border-outline-variant/30 hover:bg-white/5">
-                Audits
+                {t.audits}
               </Button>
             </div>
           </div>
@@ -333,8 +396,8 @@ export default function Dashboard() {
               </div>
               <div className="absolute bottom-4 left-4 right-4 p-4 glass-card border border-white/10 rounded-xl text-xs font-mono">
                 <div className="flex justify-between mb-2">
-                  <span className="text-outline">VERIFIED CONTRACT</span>
-                  <span className="text-tertiary">STABLE</span>
+                  <span className="text-outline">{t.verifiedContract}</span>
+                  <span className="text-tertiary">{t.stable}</span>
                 </div>
                 <div className="truncate text-on-surface-variant">0x71C7656EC7ab88b098defB751B7401B5f6d8976F</div>
               </div>

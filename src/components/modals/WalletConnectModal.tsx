@@ -1,6 +1,22 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useLanguage } from '@/lib/i18n/context';
+
+const translations = {
+  zh: {
+    connectWallet: '连接钱包',
+    recommended: '推荐',
+    termsPrefix: '连接即表示您同意我们的',
+    termsLink: '服务条款',
+  },
+  en: {
+    connectWallet: 'Connect Wallet',
+    recommended: 'Recommended',
+    termsPrefix: 'By connecting, you agree to our ',
+    termsLink: 'Terms of Service',
+  }
+};
 
 interface WalletOption {
   id: string;
@@ -23,6 +39,9 @@ interface WalletConnectModalProps {
 }
 
 export function WalletConnectModal({ isOpen, onClose, onSelect }: WalletConnectModalProps) {
+  const { language } = useLanguage();
+  const t = translations[language];
+
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -63,7 +82,7 @@ export function WalletConnectModal({ isOpen, onClose, onSelect }: WalletConnectM
 
         {/* Header */}
         <h2 className="font-display text-headline-md text-on-surface mb-6">
-          Connect Wallet
+          {t.connectWallet}
         </h2>
 
         {/* Wallet Options */}
@@ -91,7 +110,7 @@ export function WalletConnectModal({ isOpen, onClose, onSelect }: WalletConnectM
                   <span className="text-title-md text-on-surface">{wallet.name}</span>
                   {wallet.recommended && (
                     <span className="px-2 py-0.5 text-[10px] font-medium bg-primary/20 text-primary rounded-full">
-                      Recommended
+                      {t.recommended}
                     </span>
                   )}
                 </div>
@@ -115,8 +134,8 @@ export function WalletConnectModal({ isOpen, onClose, onSelect }: WalletConnectM
 
         {/* Footer */}
         <p className="mt-6 text-body-md text-on-surface-variant text-center">
-          By connecting, you agree to our{' '}
-          <span className="text-primary hover:underline cursor-pointer">Terms of Service</span>
+          {t.termsPrefix}
+          <span className="text-primary hover:underline cursor-pointer">{t.termsLink}</span>
         </p>
       </div>
 

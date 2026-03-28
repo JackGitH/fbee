@@ -3,6 +3,114 @@
 import { useState } from 'react';
 import { GlassCard } from '@/components/common/GlassCard';
 import { mockAdminData } from '@/lib/mock-data';
+import { useLanguage } from '@/lib/i18n/context';
+
+const translations = {
+  zh: {
+    adminConsole: '管理控制台',
+    networkNode: '网络节点 01',
+    overview: '总览',
+    miningStats: '挖矿统计',
+    nodeConfig: '节点配置',
+    userManagement: '用户管理',
+    security: '安全',
+    deployContract: '部署合约',
+    docs: '文档',
+    support: '支持',
+    systemParamsTitle: '系统参数管理',
+    systemParamsDesc: '全局核心配置与风控权限设置',
+    quickConfig: '快速配置',
+    dailyDepositLimit: '每日入金人数上限',
+    persons: '人',
+    removeDailyLimit: '解除每日限制',
+    ignoreLimitCheck: '忽略人数上限检测',
+    buyTradingSwitch: '买入交易开关',
+    globalDexPermission: '全局 DEX 买入权限',
+    emergencyPause: '紧急暂停 (Pausable)',
+    emergencyPauseDesc: '点击将立即熔断全站智能合约交互，仅限极端市场波动或安全漏洞时使用。',
+    currentHashrate: '当前全网算力',
+    poolLevelConfig: '各档位底池 U 范围',
+    poolLevelConfigDesc: '配置不同等级的流动性池阈值',
+    addNewLevel: '新增档位',
+    level1: '初级 (Level 1)',
+    level2: '中级 (Level 2)',
+    level3: '高级 (Level 3)',
+    taxParams: '盈利税参数',
+    baseTaxRate: '基础提取税率',
+    lpReductionRate: 'LP 贡献减免率',
+    referralRewardRates: '推荐奖励比例',
+    gen1Reward: '一代奖励',
+    gen1Label: '(Direct)',
+    gen2Reward: '二代奖励',
+    gen2Label: '(Indirect)',
+    gen3Reward: '三代奖励',
+    gen3Label: '(Community)',
+    addressManagement: '地址名单管理',
+    addressManagementDesc: '黑名单限制交易，白名单免除手续费',
+    exportData: '导出数据',
+    addAddress: '新增地址',
+    type: '类型',
+    walletAddress: '钱包地址',
+    note: '备注',
+    addedDate: '添加日期',
+    actions: '操作',
+    blacklist: '黑名单',
+    whitelist: '白名单',
+    viewAllAddresses: '查看全部地址',
+  },
+  en: {
+    adminConsole: 'Admin Console',
+    networkNode: 'Network Node 01',
+    overview: 'Overview',
+    miningStats: 'Mining Stats',
+    nodeConfig: 'Node Config',
+    userManagement: 'User Management',
+    security: 'Security',
+    deployContract: 'Deploy Contract',
+    docs: 'Docs',
+    support: 'Support',
+    systemParamsTitle: 'System Parameters Management',
+    systemParamsDesc: 'Global core configuration and risk control settings',
+    quickConfig: 'Quick Configuration',
+    dailyDepositLimit: 'Daily Deposit Limit',
+    persons: 'PERSONS',
+    removeDailyLimit: 'Remove Daily Limit',
+    ignoreLimitCheck: 'Ignore person limit check',
+    buyTradingSwitch: 'Buy Trading',
+    globalDexPermission: 'Global DEX buy permission',
+    emergencyPause: 'Emergency Pause (Pausable)',
+    emergencyPauseDesc: 'Clicking will immediately halt all smart contract interactions. Use only during extreme market volatility or security vulnerabilities.',
+    currentHashrate: 'Current Network Hashrate',
+    poolLevelConfig: 'Pool Level Configuration',
+    poolLevelConfigDesc: 'Configure liquidity pool thresholds for different levels',
+    addNewLevel: 'Add New Level',
+    level1: 'Basic (Level 1)',
+    level2: 'Intermediate (Level 2)',
+    level3: 'Advanced (Level 3)',
+    taxParams: 'Tax Parameters',
+    baseTaxRate: 'Base Withdrawal Tax',
+    lpReductionRate: 'LP Contribution Reduction',
+    referralRewardRates: 'Referral Reward Rates',
+    gen1Reward: 'Gen 1 Reward',
+    gen1Label: '(Direct)',
+    gen2Reward: 'Gen 2 Reward',
+    gen2Label: '(Indirect)',
+    gen3Reward: 'Gen 3 Reward',
+    gen3Label: '(Community)',
+    addressManagement: 'Address Management',
+    addressManagementDesc: 'Blacklist restricts trading, whitelist exempts fees',
+    exportData: 'Export Data',
+    addAddress: 'Add Address',
+    type: 'Type',
+    walletAddress: 'Wallet Address',
+    note: 'Note',
+    addedDate: 'Added Date',
+    actions: 'Actions',
+    blacklist: 'Blacklist',
+    whitelist: 'Whitelist',
+    viewAllAddresses: 'View All Addresses',
+  },
+};
 
 // SVG Icons as components
 const OverviewIcon = () => (
@@ -151,15 +259,18 @@ function NavItem({ icon, label, active = false, onClick }: NavItemProps) {
 }
 
 export default function AdminPage() {
+  const { language } = useLanguage();
+  const t = translations[language];
+  
   // State management
   const [activeNav, setActiveNav] = useState('node');
   const [dailyLimit, setDailyLimit] = useState(mockAdminData.dailyDepositLimit);
   const [isLimitRemoved, setIsLimitRemoved] = useState(mockAdminData.isLimitRemoved);
   const [isBuyEnabled, setIsBuyEnabled] = useState(mockAdminData.isBuyEnabled);
   const [poolLevels, setPoolLevels] = useState([
-    { level: 1, value: '1,000', label: '初级 (Level 1)' },
-    { level: 2, value: '5,000', label: '中级 (Level 2)' },
-    { level: 3, value: '20,000', label: '高级 (Level 3)' },
+    { level: 1, value: '1,000' },
+    { level: 2, value: '5,000' },
+    { level: 3, value: '20,000' },
   ]);
   const [baseTaxRate] = useState(mockAdminData.baseTaxRate);
   const [lpReductionRate] = useState(mockAdminData.lpReductionRate);
@@ -168,11 +279,11 @@ export default function AdminPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'overview', label: 'Overview', icon: <OverviewIcon /> },
-    { id: 'mining', label: 'Mining Stats', icon: <MiningIcon /> },
-    { id: 'node', label: 'Node Config', icon: <NodeIcon /> },
-    { id: 'users', label: 'User Management', icon: <UserIcon /> },
-    { id: 'security', label: 'Security', icon: <SecurityIcon /> },
+    { id: 'overview', label: t.overview, icon: <OverviewIcon /> },
+    { id: 'mining', label: t.miningStats, icon: <MiningIcon /> },
+    { id: 'node', label: t.nodeConfig, icon: <NodeIcon /> },
+    { id: 'users', label: t.userManagement, icon: <UserIcon /> },
+    { id: 'security', label: t.security, icon: <SecurityIcon /> },
   ];
 
   return (
@@ -194,8 +305,8 @@ export default function AdminPage() {
         }`}
       >
         <div className="px-6 py-4 mb-4">
-          <h2 className="font-display text-sm uppercase tracking-widest text-primary font-bold">Admin Console</h2>
-          <p className="text-[10px] text-on-surface-variant tracking-wider uppercase">Network Node 01</p>
+          <h2 className="font-display text-sm uppercase tracking-widest text-primary font-bold">{t.adminConsole}</h2>
+          <p className="text-[10px] text-on-surface-variant tracking-wider uppercase">{t.networkNode}</p>
         </div>
         
         <nav className="flex-1">
@@ -215,14 +326,14 @@ export default function AdminPage() {
 
         <div className="mt-auto p-6 space-y-4">
           <button className="w-full py-3 btn-primary-gradient rounded-xl font-display font-bold text-sm tracking-widest uppercase">
-            Deploy Contract
+            {t.deployContract}
           </button>
           <div className="flex flex-col gap-2">
             <a href="#" className="text-on-surface-variant flex items-center gap-3 text-[10px] uppercase tracking-widest hover:text-on-surface transition-colors">
-              <DocsIcon /> Docs
+              <DocsIcon /> {t.docs}
             </a>
             <a href="#" className="text-on-surface-variant flex items-center gap-3 text-[10px] uppercase tracking-widest hover:text-on-surface transition-colors">
-              <HelpIcon /> Support
+              <HelpIcon /> {t.support}
             </a>
           </div>
         </div>
@@ -242,9 +353,9 @@ export default function AdminPage() {
           {/* Header */}
           <header className="mb-8 lg:mb-12">
             <h1 className="text-2xl lg:text-4xl font-bold font-display tracking-tight text-on-surface mb-2">
-              系统参数管理
+              {t.systemParamsTitle}
             </h1>
-            <p className="text-on-surface-variant text-sm lg:text-base">全局核心配置与风控权限设置</p>
+            <p className="text-on-surface-variant text-sm lg:text-base">{t.systemParamsDesc}</p>
           </header>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
@@ -254,13 +365,13 @@ export default function AdminPage() {
               <GlassCard className="!p-6 lg:!p-8 space-y-6 lg:space-y-8">
                 <div className="flex items-center gap-2">
                   <span className="text-secondary"><BoltIcon /></span>
-                  <h3 className="font-display font-semibold text-lg">快速配置</h3>
+                  <h3 className="font-display font-semibold text-lg">{t.quickConfig}</h3>
                 </div>
 
                 {/* Daily Deposit Limit */}
                 <div className="space-y-3">
                   <label className="block text-xs font-medium uppercase tracking-widest text-on-surface-variant">
-                    每日入金人数上限
+                    {t.dailyDepositLimit}
                   </label>
                   <div className="relative">
                     <input
@@ -269,7 +380,7 @@ export default function AdminPage() {
                       onChange={(e) => setDailyLimit(Number(e.target.value))}
                       className="w-full bg-black border border-outline-variant/30 rounded-lg px-4 py-3 focus:ring-1 focus:ring-primary focus:border-primary outline-none text-on-surface transition-all"
                     />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-outline">PERSONS</span>
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-outline">{t.persons}</span>
                   </div>
                 </div>
 
@@ -277,16 +388,16 @@ export default function AdminPage() {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium">解除每日限制</p>
-                      <p className="text-[10px] text-on-surface-variant">忽略人数上限检测</p>
+                      <p className="text-sm font-medium">{t.removeDailyLimit}</p>
+                      <p className="text-[10px] text-on-surface-variant">{t.ignoreLimitCheck}</p>
                     </div>
                     <ToggleSwitch enabled={isLimitRemoved} onChange={setIsLimitRemoved} />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium">买入交易开关</p>
-                      <p className="text-[10px] text-on-surface-variant">全局 DEX 买入权限</p>
+                      <p className="text-sm font-medium">{t.buyTradingSwitch}</p>
+                      <p className="text-[10px] text-on-surface-variant">{t.globalDexPermission}</p>
                     </div>
                     <ToggleSwitch enabled={isBuyEnabled} onChange={setIsBuyEnabled} />
                   </div>
@@ -296,10 +407,10 @@ export default function AdminPage() {
                 <div className="pt-4 border-t border-outline-variant/10">
                   <button className="w-full py-4 bg-error/10 border border-error/30 text-error rounded-xl font-display font-bold flex items-center justify-center gap-2 hover:bg-error hover:text-white transition-all duration-300 group">
                     <span className="group-hover:animate-pulse"><DangerIcon /></span>
-                    紧急暂停 (Pausable)
+                    {t.emergencyPause}
                   </button>
                   <p className="mt-3 text-[10px] text-center text-error/60 leading-relaxed uppercase tracking-tighter">
-                    点击将立即熔断全站智能合约交互，仅限极端市场波动或安全漏洞时使用。
+                    {t.emergencyPauseDesc}
                   </p>
                 </div>
               </GlassCard>
@@ -310,7 +421,7 @@ export default function AdminPage() {
                   <ChartIcon />
                 </div>
                 <div>
-                  <p className="text-xs text-on-surface-variant">当前全网算力</p>
+                  <p className="text-xs text-on-surface-variant">{t.currentHashrate}</p>
                   <p className="text-xl font-display font-bold text-on-surface tracking-tight">12.84 PH/s</p>
                 </div>
               </div>
@@ -322,32 +433,35 @@ export default function AdminPage() {
               <GlassCard className="!p-6 lg:!p-8">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 lg:mb-8 gap-4">
                   <div>
-                    <h3 className="font-display font-semibold text-xl mb-1">各档位底池 U 范围</h3>
-                    <p className="text-xs text-on-surface-variant">配置不同等级的流动性池阈值</p>
+                    <h3 className="font-display font-semibold text-xl mb-1">{t.poolLevelConfig}</h3>
+                    <p className="text-xs text-on-surface-variant">{t.poolLevelConfigDesc}</p>
                   </div>
                   <button className="text-secondary text-xs font-bold uppercase tracking-widest flex items-center gap-1 hover:underline">
-                    <AddIcon /> 新增档位
+                    <AddIcon /> {t.addNewLevel}
                   </button>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {poolLevels.map((pool, index) => (
-                    <div key={pool.level} className="bg-black p-4 rounded-lg border border-outline-variant/20">
-                      <p className="text-[10px] text-outline mb-2 uppercase tracking-widest">{pool.label}</p>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="text"
-                          value={pool.value}
-                          onChange={(e) => {
-                            const newLevels = [...poolLevels];
-                            newLevels[index].value = e.target.value;
-                            setPoolLevels(newLevels);
-                          }}
-                          className="bg-transparent w-full text-lg font-mono font-bold outline-none border-b border-outline-variant focus:border-primary text-on-surface"
-                        />
-                        <span className="text-xs text-outline">USDT</span>
+                  {poolLevels.map((pool, index) => {
+                    const levelLabels = [t.level1, t.level2, t.level3];
+                    return (
+                      <div key={pool.level} className="bg-black p-4 rounded-lg border border-outline-variant/20">
+                        <p className="text-[10px] text-outline mb-2 uppercase tracking-widest">{levelLabels[index]}</p>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={pool.value}
+                            onChange={(e) => {
+                              const newLevels = [...poolLevels];
+                              newLevels[index].value = e.target.value;
+                              setPoolLevels(newLevels);
+                            }}
+                            className="bg-transparent w-full text-lg font-mono font-bold outline-none border-b border-outline-variant focus:border-primary text-on-surface"
+                          />
+                          <span className="text-xs text-outline">USDT</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </GlassCard>
 
@@ -355,17 +469,17 @@ export default function AdminPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Tax Parameters */}
                 <GlassCard className="!p-6 lg:!p-8">
-                  <h3 className="font-display font-semibold text-lg mb-4">盈利税参数</h3>
+                  <h3 className="font-display font-semibold text-lg mb-4">{t.taxParams}</h3>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center bg-black px-4 py-3 rounded-lg">
-                      <span className="text-sm">基础提取税率</span>
+                      <span className="text-sm">{t.baseTaxRate}</span>
                       <div className="flex items-center gap-2">
                         <span className="font-mono font-bold text-tertiary">{baseTaxRate}</span>
                         <span className="text-xs text-outline">%</span>
                       </div>
                     </div>
                     <div className="flex justify-between items-center bg-black px-4 py-3 rounded-lg">
-                      <span className="text-sm">LP 贡献减免率</span>
+                      <span className="text-sm">{t.lpReductionRate}</span>
                       <div className="flex items-center gap-2">
                         <span className="font-mono font-bold text-tertiary">{lpReductionRate}</span>
                         <span className="text-xs text-outline">%</span>
@@ -376,24 +490,24 @@ export default function AdminPage() {
 
                 {/* Referral Rewards */}
                 <GlassCard className="!p-6 lg:!p-8">
-                  <h3 className="font-display font-semibold text-lg mb-4">推荐奖励比例</h3>
+                  <h3 className="font-display font-semibold text-lg mb-4">{t.referralRewardRates}</h3>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-on-surface-variant w-20">一代奖励<br/>(Direct)</span>
+                      <span className="text-xs text-on-surface-variant w-20">{t.gen1Reward}<br/>{t.gen1Label}</span>
                       <div className="flex-1 mx-3 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
                         <div className="h-full bg-primary" style={{ width: `${referralRewards.gen1}%` }}></div>
                       </div>
                       <span className="font-mono font-bold text-sm w-10 text-right">{referralRewards.gen1}%</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-on-surface-variant w-20">二代奖励<br/>(Indirect)</span>
+                      <span className="text-xs text-on-surface-variant w-20">{t.gen2Reward}<br/>{t.gen2Label}</span>
                       <div className="flex-1 mx-3 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
                         <div className="h-full bg-primary/70" style={{ width: `${referralRewards.gen2}%` }}></div>
                       </div>
                       <span className="font-mono font-bold text-sm w-10 text-right">{referralRewards.gen2}%</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-on-surface-variant w-20">三代奖励<br/>(Community)</span>
+                      <span className="text-xs text-on-surface-variant w-20">{t.gen3Reward}<br/>{t.gen3Label}</span>
                       <div className="flex-1 mx-3 h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
                         <div className="h-full bg-primary/40" style={{ width: `${referralRewards.gen3}%` }}></div>
                       </div>
@@ -407,16 +521,16 @@ export default function AdminPage() {
               <GlassCard className="!p-0 overflow-hidden">
                 <div className="p-6 lg:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-outline-variant/10 gap-4">
                   <div>
-                    <h3 className="font-display font-semibold text-xl">地址名单管理</h3>
-                    <p className="text-xs text-on-surface-variant">黑名单限制交易，白名单免除手续费</p>
+                    <h3 className="font-display font-semibold text-xl">{t.addressManagement}</h3>
+                    <p className="text-xs text-on-surface-variant">{t.addressManagementDesc}</p>
                   </div>
                   <div className="flex gap-3">
                     <button className="px-4 py-2 bg-surface-container-highest text-on-surface rounded-lg text-xs font-bold border border-outline-variant/20 hover:bg-surface-bright transition-colors">
-                      导出数据
+                      {t.exportData}
                     </button>
                     <button className="px-4 py-2 bg-secondary/10 text-secondary rounded-lg text-xs font-bold border border-secondary/30 hover:bg-secondary/20 transition-colors flex items-center gap-2">
                       <AddIcon />
-                      新增地址
+                      {t.addAddress}
                     </button>
                   </div>
                 </div>
@@ -425,11 +539,11 @@ export default function AdminPage() {
                   <table className="w-full text-left border-collapse min-w-[600px]">
                     <thead>
                       <tr className="bg-surface-container-low text-on-surface-variant uppercase text-[10px] tracking-widest">
-                        <th className="px-6 lg:px-8 py-4 font-medium">类型</th>
-                        <th className="px-6 lg:px-8 py-4 font-medium">钱包地址</th>
-                        <th className="px-6 lg:px-8 py-4 font-medium">备注</th>
-                        <th className="px-6 lg:px-8 py-4 font-medium">添加日期</th>
-                        <th className="px-6 lg:px-8 py-4 font-medium text-right">操作</th>
+                        <th className="px-6 lg:px-8 py-4 font-medium">{t.type}</th>
+                        <th className="px-6 lg:px-8 py-4 font-medium">{t.walletAddress}</th>
+                        <th className="px-6 lg:px-8 py-4 font-medium">{t.note}</th>
+                        <th className="px-6 lg:px-8 py-4 font-medium">{t.addedDate}</th>
+                        <th className="px-6 lg:px-8 py-4 font-medium text-right">{t.actions}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-outline-variant/5">
@@ -441,7 +555,7 @@ export default function AdminPage() {
                                 ? 'bg-error/10 text-error' 
                                 : 'bg-tertiary/10 text-tertiary'
                             }`}>
-                              {item.type === 'blacklist' ? '黑名单' : '白名单'}
+                              {item.type === 'blacklist' ? t.blacklist : t.whitelist}
                             </span>
                           </td>
                           <td className="px-6 lg:px-8 py-4 font-mono text-sm text-outline">{item.address}</td>
@@ -460,7 +574,7 @@ export default function AdminPage() {
                 
                 <div className="p-4 bg-surface-container-low/50 flex justify-center">
                   <button className="text-xs text-on-surface-variant hover:text-secondary transition-colors uppercase tracking-widest font-bold">
-                    查看全部地址
+                    {t.viewAllAddresses}
                   </button>
                 </div>
               </GlassCard>
